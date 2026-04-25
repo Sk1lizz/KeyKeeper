@@ -1,6 +1,6 @@
 # src\models\password_entry.py
 
-"""  """
+""" Модель данных для записи. """
 
 from dataclasses import dataclass
 from datetime import datetime
@@ -21,7 +21,7 @@ class EntryPassword:
     updated_at: Optional[datetime] = None
 
     def to_dict(self) -> dict:
-        """"""
+        """ Превращение объекта в словарь """
 
         return {
             "title": self.title,
@@ -35,7 +35,7 @@ class EntryPassword:
     
     @classmethod
     def from_dict(cls, data: dict) -> "EntryPassword":
-        """"""
+        """ Создает объект из словаря """
 
         return cls(
             id=data.get("id"),
