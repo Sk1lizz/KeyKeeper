@@ -35,13 +35,13 @@ class CryptoManager:
         debug("Генерация ключа шифрования.")
 
         kdf = PBKDF2HMAC(
-            algorithm=hashes.SHA256,
+            algorithm=hashes.SHA256(),
             length=32,
             salt=salt,
             iterations=iterations
         )
 
-        key = base64.urlsafe_b64decode(kdf.derive(password.encode()))
+        key = base64.urlsafe_b64encode(kdf.derive(password.encode()))
 
         debug("Ключ сгенирирован.")
 
@@ -58,7 +58,7 @@ class CryptoManager:
         return encrypted
     
     @staticmethod
-    def encrypt(data: str, key: bytes) -> str:
+    def decrypt(data: str, key: bytes) -> str:
         """ Расшифровка пароля """
 
         f = Fernet(key)
