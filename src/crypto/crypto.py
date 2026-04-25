@@ -43,4 +43,26 @@ class CryptoManager:
 
         key = base64.urlsafe_b64decode(kdf.derive(password.encode()))
 
-        debug
+        debug("Ключ сгенирирован.")
+
+        return key
+    
+    @staticmethod
+    def encrypt(data: str, key: bytes) -> str:
+        """"""
+
+        f = Fernet(key)
+        encrypted = f.encrypt(data.encode()).decode()
+        debug("Данные зашифрованы.")
+
+        return encrypted
+    
+    @staticmethod
+    def encrypt(data: str, key: bytes) -> str:
+        """"""
+
+        f = Fernet(key)
+        encrypted = f.decrypt(data.encode()).decode()
+        debug("Данные расшифрованы.")
+
+        return encrypted
