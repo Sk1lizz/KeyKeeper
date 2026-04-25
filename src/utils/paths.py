@@ -109,6 +109,15 @@ def get_cache_data_dir() -> Path:
 
     return cache_dir
 
+def get_log_dir() -> Path:
+    """"""
+
+    log_dir = get_app_data_dir() / "logs"
+
+    log_dir.mkdir(parents=True, exist_ok=True)
+
+    return log_dir
+
 
 # ===================================================
 # Пути к конкретным файлам
@@ -135,4 +144,4 @@ def get_config_path() -> Path:
 def get_log_path() -> Path:
     """ Путь до логов """
 
-    return get_app_data_dir() / "keykeeper.log"
+    return get_log_dir() / "keykeeper.log"
