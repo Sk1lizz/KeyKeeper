@@ -110,7 +110,7 @@ def get_cache_data_dir() -> Path:
     return cache_dir
 
 def get_log_dir() -> Path:
-    """"""
+    """ Путь до папки с логами """
 
     log_dir = get_app_data_dir() / "logs"
 
