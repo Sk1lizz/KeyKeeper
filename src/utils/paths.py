@@ -108,3 +108,31 @@ def get_cache_data_dir() -> Path:
     cache_dir.mkdir(parents=True, exist_ok=True)
 
     return cache_dir
+
+
+# ===================================================
+# Пути к конкретным файлам
+# ===================================================
+
+def get_database_path() -> Path:
+    """"""
+
+    return get_app_data_dir() / "data.db"
+
+
+def get_salt_path() -> Path:
+    """"""
+
+    return get_app_data_dir() / "salt.bin"
+
+
+def get_config_path() -> Path:
+    """"""
+
+    return get_config_data_dir() / "config.yaml"
+
+
+def get_log_path() -> Path:
+    """"""
+
+    return get_app_data_dir() / "keykeeper.log"
