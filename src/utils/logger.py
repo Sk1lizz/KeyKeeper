@@ -1,6 +1,6 @@
-# 
+# src\utils\logger.py
 
-""""""
+""" Логгер для упрощения логирования """
 
 import logging
 import sys
@@ -20,12 +20,12 @@ from src.utils.constants import (
 )
 
 def setup_logger() -> logging.Logger:
-    """"""
+    """ Настрйока логера """
 
     logger = logging.getLogger("KeyKeeper")
     logger.setLevel(logging.DEBUG)
 
-    if logger.handlers:
+    if logger.handlers: # Если уже существует возвращаем готовый
         return logger
     
     formatter = logging.Formatter(
@@ -57,35 +57,36 @@ def setup_logger() -> logging.Logger:
 logger = setup_logger()
 
 
-#
-#
-#
+# ===================================================
+# Для упрощения логировая
+# ===================================================
+
 
 def debug(message: str):
-    """"""
+    """ Отладочное сообщение """
 
     logger.debug(message)
 
 
 def info(message: str):
-    """"""
+    """ Информационное сообщение """
     
     logger.info(message)
 
 
 def warning(message: str):
-    """"""
+    """ Предупреждение """
     
     logger.warning(message)
 
 
 def error(message: str):
-    """"""
+    """ Ошибка """
     
     logger.error(message)
 
 
 def critical(message: str):
-    """"""
+    """ Критическая ошибка """
     
     logger.critical(message)
