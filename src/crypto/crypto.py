@@ -1,6 +1,6 @@
-#
+# src\crypto\crypto.py
 
-""""""
+""" Все функции для шифровки пароля пользователя """
 
 import os
 import base64
@@ -21,7 +21,7 @@ class CryptoManager:
 
     @staticmethod
     def generate_salt(size: int = 16) -> bytes:
-        """"""
+        """ Генерация соли """
 
         salt = os.urandom(size)
         debug(f"Сгенирирована соль размером {size} байт.")
@@ -30,7 +30,7 @@ class CryptoManager:
     
     @staticmethod
     def derive_key(password: str, salt: bytes, iterations: int = 100000) -> bytes:
-        """"""
+        """ Генерация ключа шифрования из соли и мастер пароля """
 
         debug("Генерация ключа шифрования.")
 
@@ -49,7 +49,7 @@ class CryptoManager:
     
     @staticmethod
     def encrypt(data: str, key: bytes) -> str:
-        """"""
+        """ Зашифровка пароля """
 
         f = Fernet(key)
         encrypted = f.encrypt(data.encode()).decode()
@@ -59,7 +59,7 @@ class CryptoManager:
     
     @staticmethod
     def encrypt(data: str, key: bytes) -> str:
-        """"""
+        """ Расшифровка пароля """
 
         f = Fernet(key)
         encrypted = f.decrypt(data.encode()).decode()
