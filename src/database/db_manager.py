@@ -96,4 +96,65 @@ class DatabaseManager:
         return entry_id
     
     
+    def get_all_entries(self) -> List[EntryPassword]:
+        """"""
+
+        cursor = self.conection.cursor()
+
+        cursor.execute("SELECT * FROM entryes ORDER BY title")
+
+        rows = cursor.fetchall()
+
+        
+        entryes = []
+        for row in rows:
+            entry = EntryPassword(
+                id=row["id"],
+                title=row["title"],
+                username=row["username"],
+                password=row["password"],
+                url=row["url"] or "",
+                notes=row["notes"] or "",
+                category=row["category"],
+                favorite=row["favorite"],
+                created_at=row["created_at"],
+                updated_at=row["updated_at"]
+            )
+
+            entryes.append(entry)
+
+        debug(f"Загруджено {len(entryes)} записей.")
+
+        return entryes
     
+
+    def get_entry_by_id(self, entry_id: int) -> Optional[EntryPassword]:
+        """"""
+
+        cursor = self.conection.cursor()
+        cursor.execute(f"SELECT * FROM entryes WHERE id = ?", (entry_id))
+        
+        row = cursor.fetchone()
+
+        if not row:
+            warning(f"Запись с ID {entry_id} не найдена")
+            return None
+        
+        return EntryPassword(
+            id=row["id"],
+            title=row["title"],
+            username=row["username"],
+            password=row["password"],
+            url=row["url"] or "",
+            notes=row["notes"] or "",
+            category=row["category"],
+            favorite=row["favorite"],
+            created_at=row["created_at"],
+            updated_at=row["updated_at"]
+        )
+    
+    
+    def update_entry(self, entry: EntryPassword) -> bool:
+        """"""
+
+        cursor = self.conection.cursor()
