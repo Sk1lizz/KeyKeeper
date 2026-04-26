@@ -158,3 +158,32 @@ class DatabaseManager:
         """"""
 
         cursor = self.conection.cursor()
+        cursor.execute("""
+            UPDATE entries 
+            SET title = ?, username = ?, password = ?, url = ?, notes = ?, 
+                category = ?, favorite = ?, updated_at = CURRENT_TIMESTAMP
+            WHERE id = ?
+        """, (
+            entry.title,
+            entry.username,
+            entry.password,
+            entry.url,
+            entry.notes,
+            entry.category,
+            entry.favorite,
+            entry.id,
+        ))
+
+        self.conection.commit()
+
+        updated = cursor.rowcount > 0
+
+        if updated:
+            debug(f"Запись '{entry.title}' обновлена (ID {entry.id})")
+        
+        else:
+            warning(f"Запись с ID {entry.id} не найдена")
+
+        return updated
+    
+    
