@@ -1,6 +1,6 @@
-# 
+# src\database\db_manager.py
 
-"""  """
+""" Модуль для работой с базой данных """
 
 import sqlite3
 from pathlib import Path
@@ -18,7 +18,7 @@ from src.models.password_entry import EntryPassword
 
 
 class DatabaseManager:
-    """"""
+    """ Модуль со всеми функциями """
 
     def __init__(self, db_path: Path):
         self.db_path = db_path
@@ -27,7 +27,7 @@ class DatabaseManager:
 
 
     def _init_db(self) -> None:
-        """"""
+        """ Создания соединения с базой данных """
 
         self.conection = sqlite3.connect(self.db_path)
 
@@ -38,7 +38,7 @@ class DatabaseManager:
         info(f"База данных инициализирована: {self.db_path}")
 
     def _create_tables(self) -> None:
-        """"""
+        """ Проверка наличия таблицы """
 
         cursor = self.conection.cursor()
 
@@ -57,20 +57,13 @@ class DatabaseManager:
             )
         """)
 
-        cursor.execute("""
-            CREATE TABLE IF NOT EXISTS settings (
-                key TEXT PRIMARY KEY,
-                value TEXT NOT NULL
-            )
-        """)
-
         self.conection.commit()
 
         debug("Таблица entries создана/проверена.")
 
 
     def add_entry(self, entry: EntryPassword) -> int:
-        """"""
+        """ Добавление новой записи """
 
         cursor = self.conection.cursor()
         
@@ -97,11 +90,11 @@ class DatabaseManager:
     
     
     def get_all_entries(self) -> List[EntryPassword]:
-        """"""
+        """ Получение всех записей """
 
         cursor = self.conection.cursor()
 
-        cursor.execute("SELECT * FROM entryes ORDER BY title")
+        cursor.execute("SELECT * FROM entries ORDER BY title")
 
         rows = cursor.fetchall()
 
@@ -129,10 +122,10 @@ class DatabaseManager:
     
 
     def get_entry_by_id(self, entry_id: int) -> Optional[EntryPassword]:
-        """"""
+        """ Получение записи по id """
 
         cursor = self.conection.cursor()
-        cursor.execute(f"SELECT * FROM entryes WHERE id = ?", (entry_id))
+        cursor.execute(f"SELECT * FROM entries WHERE id = ?", (entry_id,))
         
         row = cursor.fetchone()
 
@@ -155,7 +148,7 @@ class DatabaseManager:
     
     
     def update_entry(self, entry: EntryPassword) -> bool:
-        """"""
+        """ Изменение записи """
 
         cursor = self.conection.cursor()
         cursor.execute("""
@@ -188,10 +181,10 @@ class DatabaseManager:
     
     
     def delete_entry(self, entry_id: int) -> bool:
-        """"""
+        """ Удаление записи по id """
 
         cursor = self.conection.cursor()
-        cursor.execute("DELETE FROM entries WHERE id = ?", (entry_id))
+        cursor.execute("DELETE FROM entries WHERE id = ?", (entry_id,))
 
         self.conection.commit()
 
@@ -208,7 +201,7 @@ class DatabaseManager:
     
 
     def delete_all_entries(self) -> int:
-        """"""
+        """ Удаление всех записей """
 
         cursor = self.conection.cursor()
         cursor.execute("DELETE FROM entries")
@@ -223,7 +216,7 @@ class DatabaseManager:
     
 
     def close(self) -> None:
-        """"""
+        """ Закрытие соединения """
 
         if self.conection:
             self.conection.close()
@@ -231,7 +224,7 @@ class DatabaseManager:
 
 
     def vacuum(self) -> None:
-        """"""
+        """ Оптимизация БД """
 
         cursor = self.conection.cursor()
         cursor.execute("VACUUM")
