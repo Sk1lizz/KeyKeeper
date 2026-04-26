@@ -147,3 +147,44 @@ class PasswordController:
         info(f"Удалено {count} записей")
 
         return count
+    
+
+    def search_entries(self, query: str) -> List[EntryPassword]:
+        """"""
+
+        all_entries = self.get_all_entries()
+        query_lower = query.lower()
+
+        results = [
+            entry for entry in all_entries
+            if query_lower in entry.title.lower()
+            or query_lower in entry.username.lower()
+        ]
+
+        debug(f"Поиск '{query}': найдено {len(results)} записей")
+
+        return results   
+    
+    
+    def get_entries_by_category(self, category: str) -> List[EntryPassword]:
+        """"""
+
+        all_entries = self.get_all_entries()
+        category_lower = category.lower()
+
+        results = [
+            entry for entry in all_entries
+            if category_lower == entry.category.lower()
+        ] 
+
+        debug(f"Категория {category}: {len(results)} записей")
+
+        return results
+    
+
+
+    def close(self) -> None:
+        """"""
+
+        self.db.close()
+        info("PasswordController закрыт")
