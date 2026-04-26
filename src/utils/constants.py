@@ -10,7 +10,8 @@
 APP_NAME = "KeyKeeper"
 APP_VERSION = "1.0.0"
 APP_AUTHOR = [
-    "skilizz"
+    "skilizz",
+    "cfif"
 ]
 APP_YEAR = "2026"
 APP_URL = "https://github.com/Sk1lizz/KeyKeeper"

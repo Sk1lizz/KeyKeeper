@@ -2,3 +2,7 @@ venv
 env
 .venv
 __pycache__/
+
+Makefile
+
+run.bat

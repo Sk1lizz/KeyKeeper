@@ -191,7 +191,7 @@ class DatabaseManager:
         deleted = cursor.rowcount > 0
 
         if deleted:
-            debug(f"Запись с ID {entry_id} уделена")
+            debug(f"Запись с ID {entry_id} удалена")
 
         else:
             warning(f"Запись с ID {entry_id} не найдена")
