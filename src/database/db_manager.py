@@ -221,3 +221,18 @@ class DatabaseManager:
     
 
     
+
+    def close(self) -> None:
+        """"""
+
+        if self.conection:
+            self.conection.close()
+            debug("Соединение с БД закрыто")
+
+
+    def vacuum(self) -> None:
+        """"""
+
+        cursor = self.conection.cursor()
+        cursor.execute("VACUUM")
+        debug("База данных оптимизирована")
