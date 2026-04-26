@@ -187,3 +187,37 @@ class DatabaseManager:
         return updated
     
     
+    def delete_entry(self, entry_id: int) -> bool:
+        """"""
+
+        cursor = self.conection.cursor()
+        cursor.execute("DELETE FROM entries WHERE id = ?", (entry_id))
+
+        self.conection.commit()
+
+        deleted = cursor.rowcount > 0
+
+        if deleted:
+            debug(f"Запись с ID {entry_id} уделена")
+
+        else:
+            warning(f"Запись с ID {entry_id} не найдена")
+
+        
+        return deleted
+    
+
+    def delete_all_entries(self) -> int:
+        """"""
+
+        cursor = self.conection.cursor()
+        cursor.execute("DELETE FROM entries")
+        self.conection.commit()
+
+        count = cursor.rowcount
+        info(f"Удалено {count} записей")
+
+        return count
+    
+
+    
