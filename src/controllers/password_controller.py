@@ -70,6 +70,7 @@ class PasswordController:
 
         return entries
     
+
     def get_entry_by_id(self, entry_id: int) -> EntryPassword:
         """"""
 
@@ -84,3 +85,65 @@ class PasswordController:
             entry.password = "[Ошибка расшифровки]"
 
         return entry
+    
+
+    def update_entry(self, entry_id: int, title: str = None, 
+                    username: str = None, password: str = None, 
+                    url: str = None, notes: str = None,
+                    category: str = None, favorite: bool = None) -> bool:
+        """"""
+
+        existing = self.db.get_entry_by_id(entry_id)
+
+        if not existing:
+            warning(f"Запись с ID {entry_id} не найдена")
+            return False
+
+        new_title = title if title is not None else existing.title
+        new_username = username if username is not None else existing.username
+        new_url = url if url is not None else existing.url
+        new_notes = notes if notes is not None else existing.notes
+        new_category = category if category is not None else existing.category
+        new_favorite = favorite if favorite is not None else existing.favorite
+
+        if password is not None:
+            new_password = self.crypto.encrypt(password, self.key)
+
+        else:
+            new_password = existing.password
+
+        update_entry = EntryPassword(
+            id=entry_id,
+            username=new_username,
+            password=new_password,
+            url=new_url,
+            notes=new_notes,
+            category=new_category,
+            favorite=new_favorite,
+        )
+
+        result = self.db.update_entry(update_entry)
+
+        if result:
+            info(f"Запись '{new_title}' (ID: {entry_id}) обновлена")
+
+        return result
+    
+
+    def delete_entry(self, entry_id: int) -> bool:
+        """"""
+
+        result = self.db.delete_entry(entry_id)
+        if result:
+            debug(f"Запись с ID {entry_id} удалена")
+
+        return result
+    
+
+    def delete_all_entries(self) -> int:
+        """"""
+
+        count = self.db.delete_all_entries()
+        info(f"Удалено {count} записей")
+
+        return count
