@@ -15,6 +15,8 @@ def get_test_paths() -> Path:
 def test_db():
     path = get_test_paths()
     Manager = DatabaseManager(db_path=path)
+
+    Manager.vacuum()
     
     entry = EntryPassword(
         title="Test5",
@@ -31,19 +33,22 @@ def test_db():
 
     #result = Manager.delete_entry(5)
 
-    result = Manager.get_entry_by_id(6)
+    #result = Manager.get_entry_by_id(6)
+    result = Manager.get_all_entries()
 
     #result = Manager.delete_all_entries()
 
     #result = Manager.update_entry(entry=entry)
 
 
-    result = EntryPassword.to_dict(result)
+    #result = EntryPassword.to_dict(result)
 
-    #for data in result:
-        #print(data)
+    for data in result:
+        print(data)
 
-    print(result)
+    #print(result)
+
+    Manager.close()
 
 def main():
     test_db()
