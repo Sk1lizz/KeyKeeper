@@ -69,4 +69,31 @@ class DatabaseManager:
         debug("Таблица entries создана/проверена.")
 
 
+    def add_entry(self, entry: EntryPassword) -> int:
+        """"""
+
+        cursor = self.conection.cursor()
+        
+        cursor.execute("""
+            INSERT INTO entries (title, username, password, url, notes, category, favorite)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+        """, (
+            entry.title,
+            entry.username,
+            entry.password,
+            entry.url,
+            entry.notes,
+            entry.category,
+            entry.favorite,
+        ))
+
+        self.conection.commit()
+
+        entry_id = cursor.lastrowid
+
+        debug(f"Запись '{entry.title}' добавлена (ID: {entry_id})")
+
+        return entry_id
+    
+    
     
