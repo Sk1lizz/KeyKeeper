@@ -1,6 +1,6 @@
-# 
+# src\controllers\password_controller.py
 
-""""""
+""" Модуль, который связывает шифрование и управления бд"""
 
 from typing import List, Optional
 from pathlib import Path
@@ -19,10 +19,10 @@ from src.utils.logger import (
 
 
 class PasswordController:
-    """"""
+    """ Контроллер для связки """
 
     def __init__(self, db_path: Path, key: bytes):
-        """"""
+        """ Инициализация """
 
         self.db = DatabaseManager(db_path)
         self.key = key
@@ -33,7 +33,7 @@ class PasswordController:
 
     def add_entry(self, title: str, username: str, password: str,
                 url: str = "", notes: str = "", category: str = "Другое") -> int:
-        """"""
+        """ Добавление записи """
 
         encrypted_password = self.crypto.encrypt(password, self.key)
 
@@ -53,7 +53,7 @@ class PasswordController:
 
 
     def get_all_entries(self) -> List[EntryPassword]:
-        """"""
+        """ Получение всех записей из бд """
 
         entries = self.db.get_all_entries()
 
@@ -72,7 +72,7 @@ class PasswordController:
     
 
     def get_entry_by_id(self, entry_id: int) -> EntryPassword:
-        """"""
+        """ Получение записи по ID """
 
         entry = self.db.get_entry_by_id(entry_id)
 
@@ -91,7 +91,7 @@ class PasswordController:
                     username: str = None, password: str = None, 
                     url: str = None, notes: str = None,
                     category: str = None, favorite: bool = None) -> bool:
-        """"""
+        """ Обновление записи """
 
         existing = self.db.get_entry_by_id(entry_id)
 
@@ -131,7 +131,7 @@ class PasswordController:
     
 
     def delete_entry(self, entry_id: int) -> bool:
-        """"""
+        """ Удаление записи """
 
         result = self.db.delete_entry(entry_id)
         if result:
@@ -141,7 +141,7 @@ class PasswordController:
     
 
     def delete_all_entries(self) -> int:
-        """"""
+        """ Удаление всей базы """
 
         count = self.db.delete_all_entries()
         info(f"Удалено {count} записей")
@@ -150,7 +150,7 @@ class PasswordController:
     
 
     def search_entries(self, query: str) -> List[EntryPassword]:
-        """"""
+        """ Поиск по запросы """
 
         all_entries = self.get_all_entries()
         query_lower = query.lower()
@@ -167,7 +167,7 @@ class PasswordController:
     
     
     def get_entries_by_category(self, category: str) -> List[EntryPassword]:
-        """"""
+        """ Поиск по категории """
 
         all_entries = self.get_all_entries()
         category_lower = category.lower()
@@ -184,7 +184,7 @@ class PasswordController:
 
 
     def close(self) -> None:
-        """"""
+        """ Закрытие соединения """
 
         self.db.close()
         info("PasswordController закрыт")
