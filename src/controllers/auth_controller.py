@@ -1,6 +1,6 @@
-# 
+# src\controllers\auth_controller.py
 
-"""  """
+""" Контроллер для аутентификации и управления хранилищем. """
 
 import os
 from pathlib import Path
@@ -20,10 +20,10 @@ from src.utils.logger import (
 )
 
 class AuthController:
-    """"""
+    """ Управляет созданием и открытием хранилища паролей. """
 
     def __init__(self):
-        ""
+        """ Инициализая контроллера """
 
         self.crypto = CryptoManager()
         self.key: Optional[bytes] = None
@@ -33,19 +33,19 @@ class AuthController:
 
     
     def is_first_run(self) -> bool:
-        """"""
+        """ Проверка на первый запуск """
 
         return not self.db_path.exists() or not self.salt_path.exists()
     
 
     def is_unlock(self) -> bool:
-        """"""
+        """ Проверка разблокировано ли хранилище """
 
         return self.key is not None or self.password_controller is not None
     
 
     def create_vault(self, master_password: str) -> bool:
-        """"""
+        """ Создание хранилища """
 
         try:
             salt = self.crypto.generate_salt()
@@ -81,7 +81,7 @@ class AuthController:
 
 
     def unlock_vault(self, master_password: str) -> bool:
-        """"""
+        """ Разблокировка хранилища """
 
         try:
             if not self.salt_path.exists():
@@ -116,7 +116,7 @@ class AuthController:
         
     
     def lock_vault(self) -> None:
-        """"""
+        """ Блокировка хранилища """
 
         if self.password_controller:
             self.password_controller.close()
@@ -128,7 +128,7 @@ class AuthController:
 
     
     def get_password_controller(self) -> Optional[PasswordController]:
-        """"""
+        """ Получение контроллера """
 
         if not self.is_unlock():
             warning("Попытка получения контроллера без разблокировки")
@@ -138,7 +138,7 @@ class AuthController:
     
 
     def delete_vault(self) -> bool:
-        """"""
+        """ Удаление хранилища """
 
         try:
             self.lock_vault()
@@ -160,5 +160,4 @@ class AuthController:
         except Exception as e:
             error(f"Ошибка удаления хранилища: {e}")
             return False
-        
         
