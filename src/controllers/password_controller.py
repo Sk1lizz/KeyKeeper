@@ -150,7 +150,7 @@ class PasswordController:
     
 
     def search_entries(self, query: str) -> List[EntryPassword]:
-        """ Поиск по запросы """
+        """ Поиск по запросу """
 
         all_entries = self.get_all_entries()
         query_lower = query.lower()
