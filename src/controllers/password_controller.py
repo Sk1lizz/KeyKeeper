@@ -57,7 +57,12 @@ class PasswordController:
 
         entries = self.db.get_all_entries()
 
+        results = []
+
         for entry in entries:
+            if entry.title == "__system__" and entry.username == "__system__":
+                    continue
+            
             try:
                 decrypted = self.crypto.decrypt(entry.password, self.key)
                 entry.password = decrypted
@@ -66,9 +71,11 @@ class PasswordController:
                 error(f"Ошибка расшифровки записи {entry.id}: {e}")
                 entry.password = "[Ошибка расшифровки]"
 
-        debug(f"Загружено {len(entries)} записей")
+            results.append(entry)
 
-        return entries
+        debug(f"Загружено {len(results)} записей")
+
+        return results
     
 
     def get_entry_by_id(self, entry_id: int) -> EntryPassword:
@@ -150,7 +157,7 @@ class PasswordController:
     
 
     def search_entries(self, query: str) -> List[EntryPassword]:
-        """ Поиск по запросы """
+        """ Поиск по запросу """
 
         all_entries = self.get_all_entries()
         query_lower = query.lower()
