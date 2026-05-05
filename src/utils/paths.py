@@ -145,3 +145,9 @@ def get_log_path() -> Path:
     """ Путь до логов """
 
     return get_log_dir() / "keykeeper.log"
+
+
+def get_translation_path(lang_code: str) -> Path:
+    """ Путь до переводов """
+
+    return get_resource_path(f"translations/{lang_code}.yaml")
