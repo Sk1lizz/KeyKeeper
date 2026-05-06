@@ -160,4 +160,3 @@ class AuthController:
         except Exception as e:
             error(f"Ошибка удаления хранилища: {e}")
             return False
-        
