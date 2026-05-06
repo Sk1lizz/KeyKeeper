@@ -13,7 +13,7 @@ class Ui_Dialog(object):
     def setupUi(self, Dialog):
         if not Dialog.objectName():
             Dialog.setObjectName(u"Dialog")
-        Dialog.resize(500, 400)
+        Dialog.resize(500, 375)
         Dialog.setStyleSheet(u"")
         self.verticalLayout = QVBoxLayout(Dialog)
         self.verticalLayout.setObjectName(u"verticalLayout")
@@ -23,7 +23,7 @@ class Ui_Dialog(object):
 
         self.lbl_title = QLabel(Dialog)
         self.lbl_title.setObjectName(u"lbl_title")
-        self.lbl_title.setStyleSheet(u"font-size: 20pt")
+        self.lbl_title.setStyleSheet(u"font-size: 20pt; font-weight: bold;")
         self.lbl_title.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.verticalLayout.addWidget(self.lbl_title)
