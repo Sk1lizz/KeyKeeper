@@ -9,11 +9,13 @@ from PySide6.QtWidgets import (QApplication, QDialog, QHBoxLayout, QLabel,
     QLineEdit, QPushButton, QSizePolicy, QSpacerItem,
     QVBoxLayout, QWidget)
 
+from src.widgets.password_line_edit import PasswordLineEdit
+
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
         if not Dialog.objectName():
             Dialog.setObjectName(u"Dialog")
-        Dialog.resize(500, 400)
+        Dialog.resize(500, 375)
         Dialog.setStyleSheet(u"")
         self.verticalLayout = QVBoxLayout(Dialog)
         self.verticalLayout.setObjectName(u"verticalLayout")
@@ -23,7 +25,7 @@ class Ui_Dialog(object):
 
         self.lbl_title = QLabel(Dialog)
         self.lbl_title.setObjectName(u"lbl_title")
-        self.lbl_title.setStyleSheet(u"font-size: 20pt")
+        self.lbl_title.setStyleSheet(u"font-size: 20pt; font-weight: bold;")
         self.lbl_title.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.verticalLayout.addWidget(self.lbl_title)
@@ -48,7 +50,7 @@ class Ui_Dialog(object):
 
         self.horizontalLayout.addItem(self.horizontalSpacer)
 
-        self.le_password = QLineEdit(Dialog)
+        self.le_password = PasswordLineEdit(Dialog)
         self.le_password.setObjectName(u"le_password")
 
         self.horizontalLayout.addWidget(self.le_password)

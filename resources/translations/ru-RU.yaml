@@ -22,3 +22,19 @@ login-window:
     unlock: "🔓 Разблокировать"
     cancel: "❌ Отмена"
     new-vault: "🆕 Создать новое хранилище"
+
+
+create-vault:
+  name: "KeyKeeper - Создание хранилища"
+  title: "🆕 Создание хранилища"
+  password-entry: "Мастер-пароль:"
+  wait-password: "Введите мастер-пароль"
+
+  password-confirm: "Подтверждение:"
+  wait-confirm: "Повторите мастер-пароль"
+
+  text-power: "🔒 Сила пароля:"
+
+  button: 
+    create: "✅ Создать"
+    cancel: "❌ Отмена"
