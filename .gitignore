@@ -4,3 +4,5 @@ env
 __pycache__/
 
 run.bat
+
+test_v.py

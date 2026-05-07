@@ -5,6 +5,11 @@
 from PySide6.QtWidgets import QDialog
 
 from src.views.ui.login import Ui_Dialog
+from src.views.create_vault import CreateWindow
+
+from typing import Optional
+
+from src.controllers.auth_controller import AuthController
 from src.utils.translator import tr
 from src.utils.logger import (
     logger,
@@ -19,19 +24,21 @@ from src.utils.logger import (
 class LoginWindow(QDialog):
     """"""
 
-    def __init__(self, auth: ):
+    def __init__(self, auth: Optional[AuthController] = None):
         """"""
 
         super(LoginWindow, self).__init__()
         self.ui = Ui_Dialog()
         self.ui.setupUi(self)
 
-        self._setup_ui()
+        self._auth = auth
+
+        self._setup()
 
         self.ui.btn_cancel.clicked.connect(self.close_window)
+        self.ui.btn_unlock.clicked.connect(self.unlock)
 
-
-    def _setup_ui(self) -> None:
+    def _setup(self) -> None:
         """"""
 
         #
@@ -73,10 +80,19 @@ class LoginWindow(QDialog):
     def unlock(self) -> None:
         """"""
 
-        pass
+        auth = self._auth
+        password = self.ui.le_password.text()
 
+        result = auth.unlock_vault(password)
 
-    def check_first_run(self) -> bool:
-        """"""
+        print(result)
 
-        pass
+        if result:
+            info("Успешный вход в хранилише")
+            self.accept()
+        
+        else:
+            warning("Попытка входа в хранилще с неверным паролем")
+
+            self.ui.le_password.clear()
+            self.ui.le_password.setFocus()
