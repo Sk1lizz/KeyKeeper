@@ -9,6 +9,8 @@ from PySide6.QtWidgets import (QApplication, QDialog, QHBoxLayout, QLabel,
     QLineEdit, QPushButton, QSizePolicy, QSpacerItem,
     QVBoxLayout, QWidget)
 
+from src.widgets.password_line_edit import PasswordLineEdit
+
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
         if not Dialog.objectName():
@@ -48,7 +50,7 @@ class Ui_Dialog(object):
 
         self.horizontalLayout.addItem(self.horizontalSpacer)
 
-        self.le_password = QLineEdit(Dialog)
+        self.le_password = PasswordLineEdit(Dialog)
         self.le_password.setObjectName(u"le_password")
 
         self.horizontalLayout.addWidget(self.le_password)

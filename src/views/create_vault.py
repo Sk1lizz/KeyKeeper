@@ -82,6 +82,12 @@ class CreateWindow(QDialog):
 
     
     def create_vault(self) -> None:
+        try:
+            self._auth.delete_vault()
+            info("Удаление существуещего хранилища")
+        except:
+            pass
+        
         password = self.ui.le_password.text()
 
         self._auth.create_vault(password)

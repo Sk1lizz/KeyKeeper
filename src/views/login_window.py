@@ -37,6 +37,7 @@ class LoginWindow(QDialog):
 
         self.ui.btn_cancel.clicked.connect(self.close_window)
         self.ui.btn_unlock.clicked.connect(self.unlock)
+        self.ui.btn_create.clicked.connect(self.create_db)
 
     def _setup(self) -> None:
         """"""
@@ -74,7 +75,7 @@ class LoginWindow(QDialog):
         """"""
 
         debug(f"Окно закрыто")
-        self.close()
+        self.reject()
 
 
     def unlock(self) -> None:
@@ -92,7 +93,20 @@ class LoginWindow(QDialog):
             self.accept()
         
         else:
-            warning("Попытка входа в хранилще с неверным паролем")
+            warning("Попытка входа в хранилище с неверным паролем")
 
+            self.ui.le_password.clear()
+            self.ui.le_password.setFocus()
+
+    def create_db(self) -> None:
+        info("Создание нового хранилища")
+        
+        window = CreateWindow(self._auth)
+
+        if not window.exec():
+            self.close_window()
+        
+        else:
+            self._auth.lock_vault()
             self.ui.le_password.clear()
             self.ui.le_password.setFocus()

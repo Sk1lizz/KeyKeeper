@@ -55,6 +55,8 @@ def main():
         
     controller = auth.get_password_controller()
 
-    
+
         
     sys.exit(app.exec())
+
+    

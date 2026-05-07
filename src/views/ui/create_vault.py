@@ -9,6 +9,8 @@ from PySide6.QtWidgets import (QApplication, QDialog, QGridLayout, QHBoxLayout,
     QLabel, QLineEdit, QProgressBar, QPushButton,
     QSizePolicy, QSpacerItem, QVBoxLayout, QWidget)
 
+from src.widgets.password_line_edit import PasswordLineEdit
+
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
         if not Dialog.objectName():
@@ -39,7 +41,7 @@ class Ui_Dialog(object):
 
         self.gridLayout.addWidget(self.lbl_master, 0, 1, 1, 1)
 
-        self.le_password = QLineEdit(Dialog)
+        self.le_password = PasswordLineEdit(Dialog)
         self.le_password.setObjectName(u"le_password")
 
         self.gridLayout.addWidget(self.le_password, 1, 1, 1, 1)
@@ -67,7 +69,7 @@ class Ui_Dialog(object):
 
         self.gridLayout_2.addWidget(self.lbl_confirm, 0, 1, 1, 1)
 
-        self.le_confirm = QLineEdit(Dialog)
+        self.le_confirm = PasswordLineEdit(Dialog)
         self.le_confirm.setObjectName(u"le_confirm")
 
         self.gridLayout_2.addWidget(self.le_confirm, 1, 1, 1, 1)
@@ -135,6 +137,7 @@ class Ui_Dialog(object):
 
         self.btn_create = QPushButton(Dialog)
         self.btn_create.setObjectName(u"btn_create")
+        self.btn_create.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
 
         self.horizontalLayout.addWidget(self.btn_create)
 
@@ -144,6 +147,7 @@ class Ui_Dialog(object):
 
         self.btn_cancel = QPushButton(Dialog)
         self.btn_cancel.setObjectName(u"btn_cancel")
+        self.btn_cancel.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
 
         self.horizontalLayout.addWidget(self.btn_cancel)
 
