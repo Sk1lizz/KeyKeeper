@@ -35,6 +35,6 @@ create-vault:
 
   text-power: "🔒 Сила пароля:"
 
-  button: 
+  button:
     create: "✅ Создать"
     cancel: "❌ Отмена"
