@@ -22,7 +22,7 @@ from src.utils.logger import (
 class Translator:
     """"""
 
-    _instance: Optional[Translator] = None
+    _instance: Optional["Translator"] = None
 
     def __new__(cls, lang_code: Optional[str] = None) -> "Translator":
         """"""
