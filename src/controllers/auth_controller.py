@@ -101,7 +101,7 @@ class AuthController:
                 error("Тестовая запись не найдена")
                 return False
             
-            _ = password_entry
+            _ = password_entry.password
 
             self.key = key
 
@@ -109,7 +109,7 @@ class AuthController:
             return True
 
         except Exception as e:
-            warning(f"Мастер неверный или хранилище повреждено: {e}")
+            warning(f"Мастер пароль неверный или хранилище повреждено: {e}")
             self.key = None
             self.password_controller = None
             return False

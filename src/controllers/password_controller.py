@@ -90,6 +90,7 @@ class PasswordController:
         except Exception as e:
             error(f"Ошибка расшифровки записи {entry_id}: {e}")
             entry.password = "[Ошибка расшифровки]"
+            raise
 
         return entry
     
