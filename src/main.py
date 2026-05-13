@@ -6,6 +6,7 @@ from PySide6.QtWidgets import QApplication
 
 from src.views.login_window import LoginWindow
 from src.views.create_vault import CreateWindow
+from src.views.main_window import MainWindow
 
 from src.controllers.auth_controller import AuthController
 
@@ -30,14 +31,14 @@ def main():
 
     if auth.is_first_run():
         info("Первый запуск - создание хранилища")
-        
+
         window = CreateWindow(auth)
 
         if not window.exec():
             return
-        
+
         auth.lock_vault()
-        
+
         info("Вход в хранилище после создания")
 
         window = LoginWindow(auth)
@@ -52,11 +53,14 @@ def main():
 
         if not window.exec():
             return
-        
+
     controller = auth.get_password_controller()
 
+    window = MainWindow(password_controller=controller)
 
-        
+    window.show()
+
+
+
     sys.exit(app.exec())
 
-    
