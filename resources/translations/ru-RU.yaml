@@ -38,3 +38,24 @@ create-vault:
   button:
     create: "✅ Создать"
     cancel: "❌ Отмена"
+
+
+main-window:
+  name: "KeyKeeper"
+  menu:
+    file: "Файл"
+    view: "Вид"
+    info: "Помощь"
+
+  search: "🔍 Поиск по названию или логину..."
+  button:
+    add_entry: "➕ Добавить запись"
+    delete_entry: "🗑️ Удалить"
+    lock: "🔒"
+    lock_window: "🔒 Заблокировать"
+
+    copy: "📋"
+    edit: "✏️"
+    delete: "🗑️"
+
+  status: "📊 Всего записей: {count}"
