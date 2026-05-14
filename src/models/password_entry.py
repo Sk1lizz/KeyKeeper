@@ -32,7 +32,7 @@ class EntryPassword:
             "category": self.category,
             "favorite": self.favorite
         }
-    
+
     @classmethod
     def from_dict(cls, data: dict) -> "EntryPassword":
         """ Создает объект из словаря """

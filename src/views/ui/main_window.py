@@ -42,6 +42,7 @@ from PySide6.QtWidgets import (
     QSizePolicy,
     QSpacerItem,
     QTableView,
+    QTableWidget,
     QVBoxLayout,
     QWidget,
 )
@@ -131,7 +132,7 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_2.addItem(self.verticalSpacer_9)
 
-        self.table = QTableView(self.centralwidget)
+        self.table = QTableWidget(self.centralwidget)
         self.table.setObjectName("table")
 
         self.horizontalLayout_2.addWidget(self.table)

@@ -2,7 +2,7 @@
 
 """"""
 
-from PySide6.QtWidgets import QMainWindow
+from PySide6.QtWidgets import QHeaderView, QMainWindow
 from PySide6.QtCore import Qt, Signal
 from src.views.ui.main_window import Ui_MainWindow
 
@@ -23,6 +23,8 @@ class MainWindow(QMainWindow):
 
         self._setup()
         self._setup_menu()
+
+        self._start()
 
     def _setup(self) -> None:
         """"""
@@ -51,6 +53,13 @@ class MainWindow(QMainWindow):
             "delete": f"{tr.get("main-window.button.delete")}",
         }
 
+        _table = [
+            f"{tr.get("main-window.table.title")}",
+            f"{tr.get("main-window.table.username")}",
+            f"{tr.get("main-window.table.password")}",
+            f"{tr.get("main-window.table.active")}",
+        ]
+
         #
 
         self.setMinimumSize(900, 600)
@@ -65,5 +74,51 @@ class MainWindow(QMainWindow):
 
         self.ui.lbl_status.setText(status)
 
+        #
+
+        table = self.ui.table
+        table.setColumnCount(4)
+        table.setHorizontalHeaderLabels(
+            _table
+        )
+
+        header = table.horizontalHeader()
+        header.setSectionResizeMode(0, QHeaderView.Stretch)
+        header.setSectionResizeMode(1, QHeaderView.Stretch)
+        header.setSectionResizeMode(2, QHeaderView.ResizeToContents)
+        header.setSectionResizeMode(3, QHeaderView.ResizeToContents)
+
     def _setup_menu(self) -> None:
+        pass
+
+    def _start(self) -> None:
+        """"""
+
+        if self.password_controller is None:
+            error(f"Не передан PasswordController!")
+            return None
+
+        controller = self.password_controller
+
+        data = controller.get_all_entries()
+
+        for entry in data:
+            self.add_entry_to_table(entry.to_dict())
+
+    def add_entry_to_table(self, entry) -> None:
+        pass
+
+    def _add_new_entry(self) -> None:
+        pass
+
+    def _delete(self, row: int | None) -> None:
+        pass
+
+    def _block_app(self) -> None:
+        pass
+
+    def _edit_entry(self, row: int) -> None:
+        pass
+
+    def _copy_entry(self, row: int) -> None:
         pass

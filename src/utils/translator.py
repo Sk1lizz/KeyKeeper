@@ -1,4 +1,4 @@
-# 
+#
 
 """  """
 
@@ -31,7 +31,7 @@ class Translator:
             cls._instance = super().__new__(cls)
 
         return cls._instance
-    
+
 
     def __init__(self, lang_code: Optional[str] = None):
         """"""
@@ -48,22 +48,22 @@ class Translator:
         """"""
 
         return DEFAULT_LANGUAGE
-    
+
 
     def _load(self) -> None:
         """"""
 
         path = get_translation_path(self._lang)
-        
+
         if not path.exists():
             warning(f"Файл с переводом не найден: {path}")
             self._data = {}
             return
-        
+
         try:
             with open(path, "r", encoding="utf-8") as file:
                 self._data = yaml.safe_load(file) or {}
-            
+
             debug(f"Загружен перевод {self._lang} ({len(self._data)} ключей)")
 
         except yaml.YAMLError as e:
@@ -84,31 +84,31 @@ class Translator:
         for k in keys:
             if isinstance(value, dict):
                 value = value.get(k)
-            
+
             else:
                 if default is not None:
                     return default
-                
+
                 warning(f"Ключ перевода не найден: {key}")
                 return key
-            
-        
+
+
         if value is None:
             if default is not None:
                 return default
-                
+
             warning(f"Ключ перевода не найден: {key}")
             return key
-        
+
 
         if isinstance(value, dict):
             if default is not None:
                 return default
-            
+
             warning(f"Ключ перевода указывает на словарь: {key}")
             return key
-        
-        
+
+
         result = str(value)
 
 
@@ -121,26 +121,26 @@ class Translator:
 
             except Exception as e:
                 warning(f"Ошибка форматирования {key}: {e}")
-        
+
         return result
-    
+
 
     def set_language(self, lang_code: str) -> None:
         """"""
 
         if self._lang == lang_code:
             return
-        
+
         self._lang = lang_code
         self._load()
         info(f"Язык изменения на: {lang_code}")
 
-    
+
     def get_current_language(self) -> str:
         """"""
 
         return self._lang
-    
+
 
     def get_available_languages(self) -> List[Tuple[str, str]]:
         """"""
@@ -149,7 +149,7 @@ class Translator:
 
         if not trans_dir.exists():
             return [("ru-RU", "Русский")]
-        
+
         language = []
 
         for file in trans_dir.glob("*.yaml"):
@@ -158,8 +158,8 @@ class Translator:
             language.append((lang_code, lang_name))
 
         return language
-    
-    
+
+
     def _get_language_name(self, lang_code: str) -> str:
         """"""
 
@@ -169,7 +169,7 @@ class Translator:
         }
 
         return names.get(lang_code, lang_code)
-    
+
 
     def reload(self) -> None:
         """"""
@@ -177,7 +177,7 @@ class Translator:
         self._load()
         debug(f"Перевод перезагружен: {self._lang}")
 
-    
+
     def has_key(self, key: str) -> bool:
         """"""
 
@@ -187,13 +187,13 @@ class Translator:
         for k in keys:
             if isinstance(value, dict):
                 value = value.get(k)
-            
+
             else:
                 return False
-            
+
 
         return value is not None and not isinstance(value, dict)
-    
+
 
     def get_all_keys(self) -> List[str]:
         """"""
@@ -210,8 +210,8 @@ class Translator:
                     keys.append(full_key)
 
             return keys
-        
+
         return _extract_keys(self._data)
-    
+
 
 tr = Translator()

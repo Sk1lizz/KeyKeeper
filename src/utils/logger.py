@@ -27,7 +27,7 @@ def setup_logger() -> logging.Logger:
 
     if logger.handlers: # Если уже существует возвращаем готовый
         return logger
-    
+
     formatter = logging.Formatter(
         LOG_FORMAT,
         datefmt=LOG_DATE_FORMAT
@@ -70,23 +70,23 @@ def debug(message: str):
 
 def info(message: str):
     """ Информационное сообщение """
-    
+
     logger.info(message)
 
 
 def warning(message: str):
     """ Предупреждение """
-    
+
     logger.warning(message)
 
 
 def error(message: str):
     """ Ошибка """
-    
+
     logger.error(message)
 
 
 def critical(message: str):
     """ Критическая ошибка """
-    
+
     logger.critical(message)
