@@ -41,7 +41,7 @@ class CreateWindow(QDialog):
         self.ui.le_password.textChanged.connect(self.check_password)
 
         self.ui
-    
+
     def _setup(self) -> None:
         """"""
 
@@ -76,18 +76,18 @@ class CreateWindow(QDialog):
         self.ui.btn_create.setEnabled(False)
         self.ui.le_confirm.setEchoMode(QLineEdit.Password)
 
-    
+
     def close_window(self) -> None:
         self.reject()
 
-    
+
     def create_vault(self) -> None:
         try:
             self._auth.delete_vault()
             info("Удаление существуещего хранилища")
         except:
             pass
-        
+
         password = self.ui.le_password.text()
 
         self._auth.create_vault(password)
@@ -97,10 +97,10 @@ class CreateWindow(QDialog):
     def check_password(self) -> None:
         password = self.ui.le_password.text()
         confirm = self.ui.le_confirm.text()
-        
+
 
         if password == confirm and not password.replace(" ", "") == "":
             self.ui.btn_create.setEnabled(True)
-        
+
         else:
             self.ui.btn_create.setEnabled(False)
