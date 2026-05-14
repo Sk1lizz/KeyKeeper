@@ -27,7 +27,7 @@ class CryptoManager:
         debug(f"Сгенирирована соль размером {size} байт.")
 
         return salt
-    
+
     @staticmethod
     def derive_key(password: str, salt: bytes, iterations: int = 100000) -> bytes:
         """ Генерация ключа шифрования из соли и мастер пароля """
@@ -46,7 +46,7 @@ class CryptoManager:
         debug("Ключ сгенирирован.")
 
         return key
-    
+
     @staticmethod
     def encrypt(data: str, key: bytes) -> str:
         """ Зашифровка пароля """
@@ -56,7 +56,7 @@ class CryptoManager:
         debug("Данные зашифрованы.")
 
         return encrypted
-    
+
     @staticmethod
     def decrypt(data: str, key: bytes) -> str:
         """ Расшифровка пароля """

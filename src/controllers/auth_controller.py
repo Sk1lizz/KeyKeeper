@@ -31,18 +31,18 @@ class AuthController:
         self.salt_path = get_salt_path()
         self.db_path = get_database_path()
 
-    
+
     def is_first_run(self) -> bool:
         """ Проверка на первый запуск """
 
         return not self.db_path.exists() or not self.salt_path.exists()
-    
+
 
     def is_unlock(self) -> bool:
         """ Проверка разблокировано ли хранилище """
 
         return self.key is not None or self.password_controller is not None
-    
+
 
     def create_vault(self, master_password: str) -> bool:
         """ Создание хранилища """
@@ -87,7 +87,7 @@ class AuthController:
             if not self.salt_path.exists():
                 error("Файл соли не найден")
                 return False
-            
+
             with open(self.salt_path, "rb") as file:
                 salt = file.read()
 
@@ -100,7 +100,7 @@ class AuthController:
             if password_entry is None:
                 error("Тестовая запись не найдена")
                 return False
-            
+
             _ = password_entry.password
 
             self.key = key
@@ -113,8 +113,8 @@ class AuthController:
             self.key = None
             self.password_controller = None
             return False
-        
-    
+
+
     def lock_vault(self) -> None:
         """ Блокировка хранилища """
 
@@ -126,23 +126,23 @@ class AuthController:
 
         info("Хранилище заблокировано")
 
-    
+
     def get_password_controller(self) -> Optional[PasswordController]:
         """ Получение контроллера """
 
         if not self.is_unlock():
             warning("Попытка получения контроллера без разблокировки")
             return None
-        
+
         return self.password_controller
-    
+
 
     def delete_vault(self) -> bool:
         """ Удаление хранилища """
 
         try:
             self.lock_vault()
-            
+
             deleted = False
 
             if self.db_path.exists():
@@ -156,8 +156,7 @@ class AuthController:
                 deleted = True
 
             return deleted
-        
+
         except Exception as e:
             error(f"Ошибка удаления хранилища: {e}")
             return False
-        

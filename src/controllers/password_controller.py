@@ -27,7 +27,7 @@ class PasswordController:
         self.db = DatabaseManager(db_path)
         self.key = key
         self.crypto = CryptoManager()
-        
+
         info("PasswordController инициализирован")
 
 
@@ -62,7 +62,7 @@ class PasswordController:
         for entry in entries:
             if entry.title == "__system__" and entry.username == "__system__":
                     continue
-            
+
             try:
                 decrypted = self.crypto.decrypt(entry.password, self.key)
                 entry.password = decrypted
@@ -76,7 +76,7 @@ class PasswordController:
         debug(f"Загружено {len(results)} записей")
 
         return results
-    
+
 
     def get_entry_by_id(self, entry_id: int) -> EntryPassword:
         """ Получение записи по ID """
@@ -93,10 +93,10 @@ class PasswordController:
             raise
 
         return entry
-    
 
-    def update_entry(self, entry_id: int, title: str = None, 
-                    username: str = None, password: str = None, 
+
+    def update_entry(self, entry_id: int, title: str = None,
+                    username: str = None, password: str = None,
                     url: str = None, notes: str = None,
                     category: str = None, favorite: bool = None) -> bool:
         """ Обновление записи """
@@ -136,7 +136,7 @@ class PasswordController:
             info(f"Запись '{new_title}' (ID: {entry_id}) обновлена")
 
         return result
-    
+
 
     def delete_entry(self, entry_id: int) -> bool:
         """ Удаление записи """
@@ -146,7 +146,7 @@ class PasswordController:
             debug(f"Запись с ID {entry_id} удалена")
 
         return result
-    
+
 
     def delete_all_entries(self) -> int:
         """ Удаление всей базы """
@@ -155,7 +155,7 @@ class PasswordController:
         info(f"Удалено {count} записей")
 
         return count
-    
+
 
     def search_entries(self, query: str) -> List[EntryPassword]:
         """ Поиск по запросу """
@@ -171,9 +171,9 @@ class PasswordController:
 
         debug(f"Поиск '{query}': найдено {len(results)} записей")
 
-        return results   
-    
-    
+        return results
+
+
     def get_entries_by_category(self, category: str) -> List[EntryPassword]:
         """ Поиск по категории """
 
@@ -183,12 +183,12 @@ class PasswordController:
         results = [
             entry for entry in all_entries
             if category_lower == entry.category.lower()
-        ] 
+        ]
 
         debug(f"Категория {category}: {len(results)} записей")
 
         return results
-    
+
 
 
     def close(self) -> None:

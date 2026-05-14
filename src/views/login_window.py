@@ -55,7 +55,7 @@ class LoginWindow(QDialog):
         debug(f"Успешное получение всех данных из языкового файла: {tr.get_current_language()}")
 
 
-        # 
+        #
 
         self.setWindowTitle(name)
         self.ui.lbl_title.setText(title)
@@ -91,7 +91,7 @@ class LoginWindow(QDialog):
         if result:
             info("Успешный вход в хранилише")
             self.accept()
-        
+
         else:
             warning("Попытка входа в хранилище с неверным паролем")
 
@@ -100,12 +100,12 @@ class LoginWindow(QDialog):
 
     def create_db(self) -> None:
         info("Создание нового хранилища")
-        
+
         window = CreateWindow(self._auth)
 
         if not window.exec():
             self.close_window()
-        
+
         else:
             self._auth.lock_vault()
             self.ui.le_password.clear()

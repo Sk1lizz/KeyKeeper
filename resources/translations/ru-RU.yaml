@@ -59,3 +59,11 @@ main-window:
     delete: "🗑️"
 
   status: "📊 Всего записей: {count}"
+
+  # Table Setting
+
+  table:
+    title: "Название"
+    username: "Имя пользователя"
+    password: "Пароль"
+    active: "Действия"

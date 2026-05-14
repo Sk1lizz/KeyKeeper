@@ -16,7 +16,7 @@ def get_base_path() -> Path:
 
     if getattr(sys, "frozen", False): # Если проект собран, то возвращает путь до временной папки
         return Path(sys._MEIPASS)
-    
+
     else: # Если проект запрускается через .py, то вернут путь до проекта
         return Path(__file__).parent.parent.parent
 
@@ -58,10 +58,10 @@ def get_app_data_dir() -> Path:
 
     if sys.platform == "win32":
         base = Path(os.environ.get("LOCALAPPDATA", Path.home() / "AppData" / "Local"))
-    
+
     elif sys.platform == "darwin":
         base = Path.home() / "Library" / "Application Support"
-    
+
     else:
         base = Path(os.environ.get("XDG_CONFIG_HOME", Path.home() / ".local" / "share"))
 
@@ -77,10 +77,10 @@ def get_config_data_dir() -> Path:
 
     if sys.platform == "win32":
         base = Path(os.environ.get("APPDATA", Path.home() / "AppData" / "Roaming"))
-    
+
     elif sys.platform == "darwin":
         base = Path.home() / "Library" / "Preferences"
-    
+
     else:
         base = Path(os.environ.get("XDG_CONFIG_HOME", Path.home() / ".config"))
 
@@ -96,10 +96,10 @@ def get_cache_data_dir() -> Path:
 
     if sys.platform == "win32":
         base = Path(os.environ.get("LOCALAPPDATA", Path.home() / "AppData" / "Local"))
-    
+
     elif sys.platform == "darwin":
         base = Path.home() / "Library" / "Caches"
-    
+
     else:
         base = Path(os.environ.get("XDG_CONFIG_HOME", Path.home() / ".cache"))
 

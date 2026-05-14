@@ -66,7 +66,7 @@ class DatabaseManager:
         """ Добавление новой записи """
 
         cursor = self.conection.cursor()
-        
+
         cursor.execute("""
             INSERT INTO entries (title, username, password, url, notes, category, favorite)
             VALUES (?, ?, ?, ?, ?, ?, ?)
@@ -87,8 +87,8 @@ class DatabaseManager:
         debug(f"Запись '{entry.title}' добавлена (ID: {entry_id})")
 
         return entry_id
-    
-    
+
+
     def get_all_entries(self) -> List[EntryPassword]:
         """ Получение всех записей """
 
@@ -98,7 +98,7 @@ class DatabaseManager:
 
         rows = cursor.fetchall()
 
-        
+
         entryes = []
         for row in rows:
             entry = EntryPassword(
@@ -119,20 +119,20 @@ class DatabaseManager:
         debug(f"Загруджено {len(entryes)} записей.")
 
         return entryes
-    
+
 
     def get_entry_by_id(self, entry_id: int) -> Optional[EntryPassword]:
         """ Получение записи по id """
 
         cursor = self.conection.cursor()
         cursor.execute(f"SELECT * FROM entries WHERE id = ?", (entry_id,))
-        
+
         row = cursor.fetchone()
 
         if not row:
             warning(f"Запись с ID {entry_id} не найдена")
             return None
-        
+
         return EntryPassword(
             id=row["id"],
             title=row["title"],
@@ -145,15 +145,15 @@ class DatabaseManager:
             created_at=row["created_at"],
             updated_at=row["updated_at"]
         )
-    
-    
+
+
     def update_entry(self, entry: EntryPassword) -> bool:
         """ Изменение записи """
 
         cursor = self.conection.cursor()
         cursor.execute("""
-            UPDATE entries 
-            SET title = ?, username = ?, password = ?, url = ?, notes = ?, 
+            UPDATE entries
+            SET title = ?, username = ?, password = ?, url = ?, notes = ?,
                 category = ?, favorite = ?, updated_at = CURRENT_TIMESTAMP
             WHERE id = ?
         """, (
@@ -173,13 +173,13 @@ class DatabaseManager:
 
         if updated:
             debug(f"Запись '{entry.title}' обновлена (ID {entry.id})")
-        
+
         else:
             warning(f"Запись с ID {entry.id} не найдена")
 
         return updated
-    
-    
+
+
     def delete_entry(self, entry_id: int) -> bool:
         """ Удаление записи по id """
 
@@ -196,9 +196,9 @@ class DatabaseManager:
         else:
             warning(f"Запись с ID {entry_id} не найдена")
 
-        
+
         return deleted
-    
+
 
     def delete_all_entries(self) -> int:
         """ Удаление всех записей """
@@ -211,9 +211,9 @@ class DatabaseManager:
         info(f"Удалено {count} записей")
 
         return count
-    
 
-    
+
+
 
     def close(self) -> None:
         """ Закрытие соединения """
