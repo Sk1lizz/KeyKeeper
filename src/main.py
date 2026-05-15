@@ -10,14 +10,7 @@ from src.views.main_window import MainWindow
 
 from src.controllers.auth_controller import AuthController
 
-from src.utils.logger import (
-    logger,
-    debug,
-    info,
-    warning,
-    error,
-    critical
-)
+from src.utils.logger import logger, debug, info, warning, error, critical
 
 import sys
 
@@ -29,38 +22,71 @@ def main():
 
     auth = AuthController()
 
+    main_class = KeyKeeper(auth)
+
     if auth.is_first_run():
-        info("Первый запуск - создание хранилища")
+        result = main_class.create_vault()
 
-        window = CreateWindow(auth)
-
-        if not window.exec():
+        if not result:
             return
 
-        auth.lock_vault()
-
-        info("Вход в хранилище после создания")
-
-        window = LoginWindow(auth)
-
-        if not window.exec():
-            return
 
     else:
-        info("Вход в хранилище")
-
-        window = LoginWindow(auth)
-
-        if not window.exec():
-            return
-
-    controller = auth.get_password_controller()
-
-    window = MainWindow(password_controller=controller)
-
-    window.show()
-
-
+        main_class.login()
 
     sys.exit(app.exec())
 
+    return
+
+
+class KeyKeeper:
+
+    _auth = None
+
+    def __init__(self, auth: AuthController):
+        self._auth = auth
+
+    def create_vault(self) -> bool:
+        info("Первый запуск - создание хранилища")
+
+        window = CreateWindow(self._auth)
+
+        if not window.exec():
+            return False
+
+        self._auth.lock_vault()
+
+        info("Вход в хранилище после создания")
+
+        return self.login()
+
+    def login(self) -> bool:
+        window = LoginWindow(self._auth)
+
+        if not window.exec():
+            return False
+
+        self.main()
+
+        return True
+
+    def main(self) -> None:
+        controller = self._auth.get_password_controller()
+
+        window = MainWindow(password_controller=controller)
+
+        window.lock_vault.connect(lambda: self.block(window))
+
+        window.show()
+
+    def block(self, window) -> None:
+        try:
+            window.close()
+            info("Окно закрыто, хранилище заблокировано.")
+
+        except Exception as e:
+            critical(f"Окно не удалось закрыть: {e}")
+
+        self._auth.lock_vault()
+
+        self.login()
