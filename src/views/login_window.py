@@ -72,9 +72,7 @@ class LoginWindow(QDialog):
 
 
     def close_window(self) -> None:
-        """"""
-
-        debug(f"Окно закрыто")
+        print("close_window() called - rejecting")
         self.reject()
 
 

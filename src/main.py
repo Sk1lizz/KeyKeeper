@@ -1,92 +1,63 @@
-#
-
-""""""
-
+import sys
 from PySide6.QtWidgets import QApplication
 
+from src.controllers.auth_controller import AuthController
 from src.views.login_window import LoginWindow
 from src.views.create_vault import CreateWindow
 from src.views.main_window import MainWindow
-
-from src.controllers.auth_controller import AuthController
-
-from src.utils.logger import logger, debug, info, warning, error, critical
-
-import sys
+from src.utils.logger import info, error
 
 
 def main():
-    """"""
-
     app = QApplication(sys.argv)
 
     auth = AuthController()
-
-    main_class = KeyKeeper(auth)
-
     if auth.is_first_run():
-        result = main_class.create_vault()
+        info("Первый запуск - создание хранилища")
+        create_window = CreateWindow(auth)
 
-        if not result:
+        if not create_window.exec():
+            info("Создание хранилища отменено, выход")
             return
 
+        info("Хранилище создано, переходим ко входу")
 
-    else:
-        main_class.login()
+    info("Вход в хранилище")
+    login_window = LoginWindow(auth)
+
+    if not login_window.exec():
+        info("Вход отменён, выход")
+        return
+
+    controller = auth.get_password_controller()
+    if controller is None:
+        error("Не удалось получить контроллер")
+        return
+
+    main_window = MainWindow(controller)
+
+    main_window.lock_vault.connect(lambda: on_lock(auth, main_window))
+
+    main_window.show()
 
     sys.exit(app.exec())
 
-    return
 
+def on_lock(auth: AuthController, main_window: MainWindow):
+    info("Блокировка хранилища")
 
-class KeyKeeper:
+    main_window.close()
 
-    _auth = None
+    auth.lock_vault()
 
-    def __init__(self, auth: AuthController):
-        self._auth = auth
+    login_window = LoginWindow(auth)
 
-    def create_vault(self) -> bool:
-        info("Первый запуск - создание хранилища")
-
-        window = CreateWindow(self._auth)
-
-        if not window.exec():
-            return False
-
-        self._auth.lock_vault()
-
-        info("Вход в хранилище после создания")
-
-        return self.login()
-
-    def login(self) -> bool:
-        window = LoginWindow(self._auth)
-
-        if not window.exec():
-            return False
-
-        self.main()
-
-        return True
-
-    def main(self) -> None:
-        controller = self._auth.get_password_controller()
-
-        window = MainWindow(password_controller=controller)
-
-        window.lock_vault.connect(lambda: self.block(window))
-
-        window.show()
-
-    def block(self, window) -> None:
-        try:
-            window.close()
-            info("Окно закрыто, хранилище заблокировано.")
-
-        except Exception as e:
-            critical(f"Окно не удалось закрыть: {e}")
-
-        self._auth.lock_vault()
-
-        self.login()
+    if login_window.exec():
+        controller = auth.get_password_controller()
+        if controller:
+            new_window = MainWindow(controller)
+            new_window.lock_vault.connect(lambda: on_lock(auth, new_window))
+            new_window.show()
+    else:
+        info("Вход отменён, выход")
+        QApplication.quit()
