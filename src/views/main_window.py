@@ -132,14 +132,17 @@ class MainWindow(QMainWindow):
                     entry.title,
                     entry.username,
                     entry.password,
+                    entry.id,
                     ])
             )
 
         count = len(data)
 
         table.setRowCount(count)
-        for row, (title, username, password) in enumerate(data):
-            table.setItem(row, 0, QTableWidgetItem(title))
+        for row, (title, username, password, id) in enumerate(data):
+            title_item = QTableWidgetItem(title)
+            title_item.setData(Qt.UserRole, id)
+            table.setItem(row, 0, title_item)
             table.setItem(row, 1, QTableWidgetItem(username))
 
             password_item = QTableWidgetItem("•" * len(password))
@@ -184,7 +187,15 @@ class MainWindow(QMainWindow):
         pass
 
     def _delete(self, row: int | None) -> None:
-        print("delete - ", row)
+        """"""
+
+        title = self.ui.table.item(row, 0).text()
+
+        entry_id = self.ui.table.item(row, 0).data(Qt.UserRole)
+
+        self.password_controller.delete_entry(entry_id)
+
+        self._start()
 
     def _block_app(self) -> None:
         self.lock_vault.emit()
