@@ -1,7 +1,7 @@
 # Makefile для KeyKeeper
 # Команды:
 
-.PHONY: run install venv help
+.PHONY: run install venv help init
 
 # Переменные
 PYTHON = python3
@@ -22,7 +22,7 @@ NC = \033[0m
 #
 #
 
-run: ##Запуск приложения
+run: ## Запуск приложения
 	@echo "$(GREEN) Запуск KeyKeeper...$(NC)"
 	$(PYTHON) run.py
 
@@ -43,6 +43,24 @@ venv: ## Создание виртуального окружения
 	$(PYTHON) -m venv $(VENV)
 	@echo "$(GREEN) Готово!$(NC)"
 
+
+init: ## Полный запуск проекта
+	make venv
+	. $(VENV_BIN)/activate && make install
+	. $(VENV_BIN)/activate && $(PYTHON) run.py
+
+
+fresh: ## Полная очистка проекта
+	@echo "$(GREEN) Удаление виртуального окружения...$(NC)"
+	rm -rf $(VENV)
+	@echo "$(GREEN) Успешно$(NC)"
+	@echo
+	@echo "$(GREEN) Удаление pycache ....$(NC)"
+	find . -type d -name 	"__pycache__" -exec rm -rf {} + 2>/dev/null || true
+	@echo "$(GREEN) Успешно$(NC)"
+
+	make venv
+	. $(VENV_BIN)/activate && make install
 
 
 #
