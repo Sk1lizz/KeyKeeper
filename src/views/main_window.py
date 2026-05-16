@@ -2,10 +2,11 @@
 
 """"""
 
-from PySide6.QtWidgets import QHBoxLayout, QHeaderView, QMainWindow, QPushButton, QTableWidgetItem, QWidget
-from PySide6.QtCore import Qt, Signal
+from PySide6.QtWidgets import QApplication, QHBoxLayout, QHeaderView, QMainWindow, QPushButton, QTableWidgetItem, QWidget
+from PySide6.QtCore import Qt, Signal, QTimer
 from src.views.ui.main_window import Ui_MainWindow
 from PySide6.QtGui import QCursor
+
 
 
 from typing import Optional
@@ -54,7 +55,7 @@ class MainWindow(QMainWindow):
         button_lock = tr.get("main-window.button.lock")
         button_lock_full = tr.get("main-window.button.lock_window")
 
-        status = tr.get("main-window.status", count="0")
+        self.status = tr.get("main-window.status", count="0")
 
         self._btn = {
             "copy": f"{tr.get("main-window.button.copy")}",
@@ -69,6 +70,8 @@ class MainWindow(QMainWindow):
             f"{tr.get("main-window.table.active")}",
         ]
 
+        self.copy_status = tr.get("main-window.status-text.copy")
+
         #
 
         self.setMinimumSize(900, 600)
@@ -81,7 +84,7 @@ class MainWindow(QMainWindow):
         self.ui.btn_block.setText(button_lock)
         self.ui.btn_block_2.setText(button_lock_full)
 
-        self.ui.lbl_status.setText(status)
+        self.ui.lbl_status.setText(self.status)
 
         #
 
@@ -190,7 +193,21 @@ class MainWindow(QMainWindow):
         print("edit - ", row)
 
     def _copy_entry(self, row: int) -> None:
-        print("copy - ", row)
+        """"""
+
+        password_item = self.ui.table.item(row, 2)
+
+        if password_item:
+            password = password_item.data(Qt.UserRole)
+
+            if password:
+                QApplication.clipboard().setText(password)
+                print(password)
+
+                text = self.ui.lbl_status.text()
+                self.ui.lbl_status.setText(self.copy_status)
+
+                QTimer.singleShot(1000, lambda: self.ui.lbl_status.setText(self.status))
 
     def add_test(self) -> None:
         controller = self.password_controller
