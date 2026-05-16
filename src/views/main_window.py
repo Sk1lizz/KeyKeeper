@@ -11,6 +11,7 @@ from PySide6.QtGui import QCursor
 from typing import Optional
 
 from src.utils.translator import tr
+from src.models.password_entry import EntryPassword
 from src.utils.logger import logger, debug, info, warning, error, critical
 
 
@@ -29,7 +30,10 @@ class MainWindow(QMainWindow):
         self._setup_menu()
         self._connect()
 
+        #self.add_test()            # Добавление новых записей для тестов. УДАЛИТЬ ПЕРЕД ПРОДОМ
+
         self._start()
+
 
     def _setup(self) -> None:
         """"""
@@ -187,3 +191,36 @@ class MainWindow(QMainWindow):
 
     def _copy_entry(self, row: int) -> None:
         print("copy - ", row)
+
+    def add_test(self) -> None:
+        controller = self.password_controller
+
+        controller.add_entry(
+            title="TEST_ONE",
+            username="USERNAME_ONE",
+            password="PASSWORD_TEST_1"
+        )
+
+        controller.add_entry(
+            title="TEST_TWO",
+            username="USERNAME_TWO",
+            password="PASSWORD_TEST_2"
+        )
+
+        controller.add_entry(
+            title="TEST_THREE",
+            username="USERNAME_THREE",
+            password="PASSWORD_TEST_3"
+        )
+
+        controller.add_entry(
+            title="TEST_FOUR",
+            username="USERNAME_FOUR",
+            password="PASSWORD_TEST_4"
+        )
+
+        controller.add_entry(
+            title="TEST_FIVE",
+            username="USERNAME_FIVE",
+            password="PASSWORD_TEST_5"
+        )
