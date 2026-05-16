@@ -2,15 +2,17 @@
 
 """"""
 
-from PySide6.QtWidgets import QHBoxLayout, QHeaderView, QMainWindow, QPushButton, QTableWidgetItem, QWidget
-from PySide6.QtCore import Qt, Signal
+from PySide6.QtWidgets import QApplication, QHBoxLayout, QHeaderView, QMainWindow, QPushButton, QTableWidgetItem, QWidget
+from PySide6.QtCore import Qt, Signal, QTimer
 from src.views.ui.main_window import Ui_MainWindow
 from PySide6.QtGui import QCursor
+
 
 
 from typing import Optional
 
 from src.utils.translator import tr
+from src.models.password_entry import EntryPassword
 from src.utils.logger import logger, debug, info, warning, error, critical
 
 
@@ -29,7 +31,10 @@ class MainWindow(QMainWindow):
         self._setup_menu()
         self._connect()
 
+        #self.add_test()            # Добавление новых записей для тестов. УДАЛИТЬ ПЕРЕД ПРОДОМ
+
         self._start()
+
 
     def _setup(self) -> None:
         """"""
@@ -50,7 +55,7 @@ class MainWindow(QMainWindow):
         button_lock = tr.get("main-window.button.lock")
         button_lock_full = tr.get("main-window.button.lock_window")
 
-        status = tr.get("main-window.status", count="0")
+        self.status = tr.get("main-window.status", count="0")
 
         self._btn = {
             "copy": f"{tr.get("main-window.button.copy")}",
@@ -65,6 +70,8 @@ class MainWindow(QMainWindow):
             f"{tr.get("main-window.table.active")}",
         ]
 
+        self.copy_status = tr.get("main-window.status-text.copy")
+
         #
 
         self.setMinimumSize(900, 600)
@@ -77,7 +84,7 @@ class MainWindow(QMainWindow):
         self.ui.btn_block.setText(button_lock)
         self.ui.btn_block_2.setText(button_lock_full)
 
-        self.ui.lbl_status.setText(status)
+        self.ui.lbl_status.setText(self.status)
 
         #
 
@@ -125,14 +132,17 @@ class MainWindow(QMainWindow):
                     entry.title,
                     entry.username,
                     entry.password,
+                    entry.id,
                     ])
             )
 
         count = len(data)
 
         table.setRowCount(count)
-        for row, (title, username, password) in enumerate(data):
-            table.setItem(row, 0, QTableWidgetItem(title))
+        for row, (title, username, password, id) in enumerate(data):
+            title_item = QTableWidgetItem(title)
+            title_item.setData(Qt.UserRole, id)
+            table.setItem(row, 0, title_item)
             table.setItem(row, 1, QTableWidgetItem(username))
 
             password_item = QTableWidgetItem("•" * len(password))
@@ -177,7 +187,15 @@ class MainWindow(QMainWindow):
         pass
 
     def _delete(self, row: int | None) -> None:
-        print("delete - ", row)
+        """"""
+
+        title = self.ui.table.item(row, 0).text()
+
+        entry_id = self.ui.table.item(row, 0).data(Qt.UserRole)
+
+        self.password_controller.delete_entry(entry_id)
+
+        self._start()
 
     def _block_app(self) -> None:
         self.lock_vault.emit()
@@ -186,4 +204,51 @@ class MainWindow(QMainWindow):
         print("edit - ", row)
 
     def _copy_entry(self, row: int) -> None:
-        print("copy - ", row)
+        """"""
+
+        password_item = self.ui.table.item(row, 2)
+
+        if password_item:
+            password = password_item.data(Qt.UserRole)
+
+            if password:
+                QApplication.clipboard().setText(password)
+                print(password)
+
+                text = self.ui.lbl_status.text()
+                self.ui.lbl_status.setText(self.copy_status)
+
+                QTimer.singleShot(1000, lambda: self.ui.lbl_status.setText(self.status))
+
+    def add_test(self) -> None:
+        controller = self.password_controller
+
+        controller.add_entry(
+            title="TEST_ONE",
+            username="USERNAME_ONE",
+            password="PASSWORD_TEST_1"
+        )
+
+        controller.add_entry(
+            title="TEST_TWO",
+            username="USERNAME_TWO",
+            password="PASSWORD_TEST_2"
+        )
+
+        controller.add_entry(
+            title="TEST_THREE",
+            username="USERNAME_THREE",
+            password="PASSWORD_TEST_3"
+        )
+
+        controller.add_entry(
+            title="TEST_FOUR",
+            username="USERNAME_FOUR",
+            password="PASSWORD_TEST_4"
+        )
+
+        controller.add_entry(
+            title="TEST_FIVE",
+            username="USERNAME_FIVE",
+            password="PASSWORD_TEST_5"
+        )

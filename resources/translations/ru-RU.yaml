@@ -60,6 +60,9 @@ main-window:
 
   status: "📊 Всего записей: {count}"
 
+  status-text:
+    copy: "✅ Пароль скопирован"
+
   # Table Setting
 
   table:
