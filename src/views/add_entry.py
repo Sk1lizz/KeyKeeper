@@ -4,7 +4,7 @@
 
 from PySide6.QtWidgets import QDialog
 
-from src.views.ui.add_entry import Ui_Dialog
+from src.views.ui.add_edit_entry import Ui_Dialog
 
 from src.utils.translator import tr
 from src.utils.logger import logger, debug, info, warning, error, critical
