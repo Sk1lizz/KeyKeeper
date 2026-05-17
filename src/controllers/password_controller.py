@@ -122,6 +122,7 @@ class PasswordController:
 
         update_entry = EntryPassword(
             id=entry_id,
+            title=new_title,
             username=new_username,
             password=new_password,
             url=new_url,
