@@ -218,7 +218,7 @@ class MainWindow(QMainWindow):
                 text = self.ui.lbl_status.text()
                 self.ui.lbl_status.setText(self.copy_status)
 
-                QTimer.singleShot(1000, lambda: self.ui.lbl_status.setText(self.status))
+                QTimer.singleShot(1000, lambda: self.ui.lbl_status.setText(text))
 
     def add_test(self) -> None:
         controller = self.password_controller
