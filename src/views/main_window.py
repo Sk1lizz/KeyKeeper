@@ -8,11 +8,9 @@ from src.views.ui.main_window import Ui_MainWindow
 from PySide6.QtGui import QCursor
 
 from src.views.add_entry import EntryAdd
-
-from typing import Optional
+from src.views.edit_entry import EntryEdit
 
 from src.utils.translator import tr
-from src.models.password_entry import EntryPassword
 from src.utils.logger import logger, debug, info, warning, error, critical
 
 
@@ -185,7 +183,7 @@ class MainWindow(QMainWindow):
 
 
     def _add_new_entry(self) -> None:
-        window = EntryAdd(self.password_controller)
+        window = EntryAdd(controller=self.password_controller)
 
         result = window.exec()
 
@@ -209,7 +207,14 @@ class MainWindow(QMainWindow):
 
 
     def _edit_entry(self, row: int) -> None:
-        print("edit - ", row)
+        id = self.ui.table.item(row, 0).data(Qt.UserRole)
+
+        window = EntryEdit(controller=self.password_controller, id=id)
+
+        result = window.exec()
+
+        if result:
+            self._start()
 
 
     def _copy_entry(self, row: int) -> None:
