@@ -40,8 +40,6 @@ class CreateWindow(QDialog):
         self.ui.le_confirm.textChanged.connect(self.check_password)
         self.ui.le_password.textChanged.connect(self.check_password)
 
-        self.ui
-
     def _setup(self) -> None:
         """"""
 

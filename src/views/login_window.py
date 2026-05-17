@@ -67,14 +67,11 @@ class LoginWindow(QDialog):
 
         self.setFixedSize(450, 350)
 
-        debug("Настройки окна успешно уставнолены")
+        debug("Настройки окна успешно установлены")
 
 
 
     def close_window(self) -> None:
-        """"""
-
-        debug(f"Окно закрыто")
         self.reject()
 
 

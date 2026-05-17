@@ -60,6 +60,9 @@ main-window:
 
   status: "📊 Всего записей: {count}"
 
+  status-text:
+    copy: "✅ Пароль скопирован"
+
   # Table Setting
 
   table:
@@ -67,3 +70,68 @@ main-window:
     username: "Имя пользователя"
     password: "Пароль"
     active: "Действия"
+
+
+add-entry:
+  name: "KeyKeeper - Добавление записи"
+  main-title: "Введите данные"
+
+  title:
+    text: "Название: "
+    wait: "Введите название..."
+
+  username:
+    text: "Имя пользователя: "
+    wait: "Введите имя пользователя..."
+
+  password:
+    text: "Пароль: "
+    wait: "Введите пароль... "
+
+  url:
+    text: "Ссылка: "
+    wait: "Ссылка... "
+
+  notes:
+    text: "Заметка: "
+    wait: "Заметка... "
+
+  category: "Выберите категорию (Недоступно)"
+
+
+  button:
+    create: "✅ Создать"
+    cancel: "❌ Отмена"
+
+
+
+edit-entry:
+  name: "KeyKeeper - Изменение записи"
+  main-title: "Редактирование записи: {title} | ID: {id}"
+
+  title:
+    text: "Название: "
+    wait: "Введите название..."
+
+  username:
+    text: "Имя пользователя: "
+    wait: "Введите имя пользователя..."
+
+  password:
+    text: "Пароль: "
+    wait: "Введите пароль... "
+
+  url:
+    text: "Ссылка: "
+    wait: "Ссылка... "
+
+  notes:
+    text: "Заметка: "
+    wait: "Заметка... "
+
+  category: "Выберите категорию (Недоступно)"
+
+
+  button:
+    save: "✅ Сохранить"
+    cancel: "❌ Отмена"

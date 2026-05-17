@@ -85,6 +85,7 @@ class Ui_MainWindow(object):
 
         self.btn_add = QPushButton(self.centralwidget)
         self.btn_add.setObjectName("btn_add")
+        self.btn_add.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
 
         self.horizontalLayout.addWidget(self.btn_add)
 
@@ -96,6 +97,7 @@ class Ui_MainWindow(object):
 
         self.btn_delete = QPushButton(self.centralwidget)
         self.btn_delete.setObjectName("btn_delete")
+        self.btn_delete.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
 
         self.horizontalLayout.addWidget(self.btn_delete)
 
@@ -107,6 +109,7 @@ class Ui_MainWindow(object):
 
         self.btn_block = QPushButton(self.centralwidget)
         self.btn_block.setObjectName("btn_block")
+        self.btn_block.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
 
         self.horizontalLayout.addWidget(self.btn_block)
 
@@ -134,6 +137,7 @@ class Ui_MainWindow(object):
 
         self.table = QTableWidget(self.centralwidget)
         self.table.setObjectName("table")
+        self.table.setEditTriggers(QTableWidget.NoEditTriggers)
 
         self.horizontalLayout_2.addWidget(self.table)
 
@@ -172,6 +176,7 @@ class Ui_MainWindow(object):
 
         self.btn_block_2 = QPushButton(self.centralwidget)
         self.btn_block_2.setObjectName("btn_block_2")
+        self.btn_block_2.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
 
         self.horizontalLayout_3.addWidget(self.btn_block_2)
 

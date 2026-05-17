@@ -2,9 +2,13 @@
 
 """"""
 
-from PySide6.QtWidgets import QHeaderView, QMainWindow
-from PySide6.QtCore import Qt, Signal
+from PySide6.QtWidgets import QApplication, QHBoxLayout, QHeaderView, QMainWindow, QPushButton, QTableWidgetItem, QWidget
+from PySide6.QtCore import Qt, Signal, QTimer
 from src.views.ui.main_window import Ui_MainWindow
+from PySide6.QtGui import QCursor
+
+from src.views.add_entry import EntryAdd
+from src.views.edit_entry import EntryEdit
 
 from src.utils.translator import tr
 from src.utils.logger import logger, debug, info, warning, error, critical
@@ -23,8 +27,11 @@ class MainWindow(QMainWindow):
 
         self._setup()
         self._setup_menu()
+        self._connect()
+
 
         self._start()
+
 
     def _setup(self) -> None:
         """"""
@@ -45,8 +52,6 @@ class MainWindow(QMainWindow):
         button_lock = tr.get("main-window.button.lock")
         button_lock_full = tr.get("main-window.button.lock_window")
 
-        status = tr.get("main-window.status", count="0")
-
         self._btn = {
             "copy": f"{tr.get("main-window.button.copy")}",
             "edit": f"{tr.get("main-window.button.edit")}",
@@ -60,6 +65,8 @@ class MainWindow(QMainWindow):
             f"{tr.get("main-window.table.active")}",
         ]
 
+        self.copy_status = tr.get("main-window.status-text.copy")
+
         #
 
         self.setMinimumSize(900, 600)
@@ -71,8 +78,6 @@ class MainWindow(QMainWindow):
         self.ui.btn_delete.setText(button_delete)
         self.ui.btn_block.setText(button_lock)
         self.ui.btn_block_2.setText(button_lock_full)
-
-        self.ui.lbl_status.setText(status)
 
         #
 
@@ -91,6 +96,13 @@ class MainWindow(QMainWindow):
     def _setup_menu(self) -> None:
         pass
 
+
+    def _connect(self) -> None:
+        self.ui.btn_block.clicked.connect(self._block_app)
+        self.ui.btn_block_2.clicked.connect(self._block_app)
+
+        self.ui.btn_add.clicked.connect(self._add_new_entry)
+
     def _start(self) -> None:
         """"""
 
@@ -102,23 +114,124 @@ class MainWindow(QMainWindow):
 
         data = controller.get_all_entries()
 
-        for entry in data:
-            self.add_entry_to_table(entry.to_dict())
+        self.add_entry_to_table(data)
 
-    def add_entry_to_table(self, entry) -> None:
-        pass
+    def add_entry_to_table(self, entries) -> None:
+        table = self.ui.table
+
+        data = list()
+
+        for entry in entries:
+            data.append(
+                tuple([
+                    entry.title,
+                    entry.username,
+                    entry.password,
+                    entry.id,
+                    ])
+            )
+
+        count = len(data)
+        self.status(count)
+
+        table.setRowCount(count)
+        for row, (title, username, password, id) in enumerate(data):
+            title_item = QTableWidgetItem(title)
+            title_item.setData(Qt.UserRole, id)
+            table.setItem(row, 0, title_item)
+            table.setItem(row, 1, QTableWidgetItem(username))
+
+            password_item = QTableWidgetItem("•" * len(password))
+            password_item.setData(Qt.UserRole, password)
+
+            table.setItem(row, 2, password_item)
+
+            actions_widget = QWidget()
+            actions_layout = QHBoxLayout(actions_widget)
+            actions_layout.setContentsMargins(5, 0, 5, 0)
+            actions_layout.setSpacing(5)
+
+
+            copy_btn = QPushButton(self._btn["copy"])
+            copy_btn.setFixedSize(30, 25)
+            copy_btn.setToolTip("Copy Password")
+            copy_btn.clicked.connect(lambda _, r=row: self._copy_entry(r))
+            copy_btn.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
+            actions_layout.addWidget(copy_btn)
+
+
+            edit_btn = QPushButton(self._btn["edit"])
+            edit_btn.setFixedSize(30, 25)
+            edit_btn.setToolTip("Edit Password")
+            edit_btn.clicked.connect(lambda _, r=row: self._edit_entry(r))
+            edit_btn.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
+            actions_layout.addWidget(edit_btn)
+
+
+            delete_btn = QPushButton(self._btn["delete"])
+            delete_btn.setFixedSize(30, 25)
+            delete_btn.setToolTip("Delete Password")
+            delete_btn.clicked.connect(lambda _, r=row: self._delete(r))
+            delete_btn.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
+            actions_layout.addWidget(delete_btn)
+
+
+            table.setCellWidget(row, 3, actions_widget)
+
 
     def _add_new_entry(self) -> None:
-        pass
+        window = EntryAdd(controller=self.password_controller)
+
+        result = window.exec()
+
+        if result:
+            self._start()
 
     def _delete(self, row: int | None) -> None:
-        pass
+        """"""
+
+        title = self.ui.table.item(row, 0).text()
+
+        entry_id = self.ui.table.item(row, 0).data(Qt.UserRole)
+
+        self.password_controller.delete_entry(entry_id)
+
+        self._start()
+
 
     def _block_app(self) -> None:
-        pass
+        self.lock_vault.emit()
+
 
     def _edit_entry(self, row: int) -> None:
-        pass
+        id = self.ui.table.item(row, 0).data(Qt.UserRole)
+
+        window = EntryEdit(controller=self.password_controller, id=id)
+
+        result = window.exec()
+
+        if result:
+            self._start()
+
 
     def _copy_entry(self, row: int) -> None:
-        pass
+        """"""
+
+        password_item = self.ui.table.item(row, 2)
+
+        if password_item:
+            password = password_item.data(Qt.UserRole)
+
+            if password:
+                QApplication.clipboard().setText(password)
+
+                text = self.ui.lbl_status.text()
+                self.ui.lbl_status.setText(self.copy_status)
+
+                QTimer.singleShot(1000, lambda: self.ui.lbl_status.setText(text))
+
+
+    def status(self, amount: int=0) -> None:
+        status_text = tr.get("main-window.status", count=str(amount))
+
+        self.ui.lbl_status.setText(status_text)
