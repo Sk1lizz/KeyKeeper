@@ -5,7 +5,7 @@
 
 from PySide6.QtWidgets import QWidget, QHBoxLayout, QLineEdit, QPushButton
 from PySide6.QtCore import Signal, Qt
-from PySide6.QtGui import QIcon
+from PySide6.QtGui import QIcon, QCursor
 
 
 class PasswordLineEdit(QWidget):
@@ -34,30 +34,31 @@ class PasswordLineEdit(QWidget):
         self.toggle_btn.setFixedHeight(25)
         self.toggle_btn.setCheckable(True)
         self.toggle_btn.clicked.connect(self._toggle_visibility)
+        self.toggle_btn.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
         layout.addWidget(self.toggle_btn)
 
-    
+
     def _toggle_visibility(self, checked):
         """"""
-        
+
         if checked:
             self.line_edit.setEchoMode(QLineEdit.Normal)
             self.toggle_btn.setText("🔒")
-        
+
         else:
             self.line_edit.setEchoMode(QLineEdit.Password)
             self.toggle_btn.setText("👁")
 
-    
+
     def text(self) -> str:
         return self.line_edit.text()
-    
+
     def setText(self, text: str):
         self.line_edit.setText(text)
 
     def clear(self):
         self.line_edit.clear()
-    
+
     def setPlaceholderText(self, text: str):
         self.line_edit.setPlaceholderText(text)
 
@@ -71,7 +72,7 @@ class PasswordLineEdit(QWidget):
 
     def isReadOnly(self) -> bool:
         return self.line_edit.isReadOnly()
-    
+
     def setFocus(self):
         self.line_edit.setFocus()
 
