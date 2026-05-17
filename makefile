@@ -62,6 +62,10 @@ fresh: ## Полная очистка проекта
 	make venv
 	. $(VENV_BIN)/activate && make install
 
+clear: ## Очистка временных файлов
+	@echo "$(GREEN) Удаление pycache ....$(NC)"
+	find . -type d -name 	"__pycache__" -exec rm -rf {} + 2>/dev/null || true
+	@echo "$(GREEN) Успешно$(NC)"
 
 #
 #
