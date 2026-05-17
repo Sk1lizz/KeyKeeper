@@ -52,8 +52,6 @@ class MainWindow(QMainWindow):
         button_lock = tr.get("main-window.button.lock")
         button_lock_full = tr.get("main-window.button.lock_window")
 
-        self.status = tr.get("main-window.status", count="0")
-
         self._btn = {
             "copy": f"{tr.get("main-window.button.copy")}",
             "edit": f"{tr.get("main-window.button.edit")}",
@@ -80,8 +78,6 @@ class MainWindow(QMainWindow):
         self.ui.btn_delete.setText(button_delete)
         self.ui.btn_block.setText(button_lock)
         self.ui.btn_block_2.setText(button_lock_full)
-
-        self.ui.lbl_status.setText(self.status)
 
         #
 
@@ -136,6 +132,7 @@ class MainWindow(QMainWindow):
             )
 
         count = len(data)
+        self.status(count)
 
         table.setRowCount(count)
         for row, (title, username, password, id) in enumerate(data):
@@ -232,3 +229,9 @@ class MainWindow(QMainWindow):
                 self.ui.lbl_status.setText(self.copy_status)
 
                 QTimer.singleShot(1000, lambda: self.ui.lbl_status.setText(text))
+
+
+    def status(self, amount: int=0) -> None:
+        status_text = tr.get("main-window.status", count=str(amount))
+
+        self.ui.lbl_status.setText(status_text)
