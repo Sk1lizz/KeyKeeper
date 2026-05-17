@@ -70,3 +70,35 @@ main-window:
     username: "Имя пользователя"
     password: "Пароль"
     active: "Действия"
+
+
+add-entry:
+  name: "KeyKeeper - Добавление записи"
+  main-title: "Введите данные"
+
+  title:
+    text: "Название: "
+    wait: "Введите название..."
+
+  username:
+    text: "Имя пользователя: "
+    wait: "Введите имя пользователя..."
+
+  password:
+    text: "Пароль: "
+    wait: "Введите пароль... "
+
+  url:
+    text: "Ссылка: "
+    wait: "Ссылка... "
+
+  notes:
+    text: "Заметка: "
+    wait: "Заметка... "
+
+  category: "Выберите категорию (Недоступно)"
+
+
+  button:
+    create: "✅ Создать"
+    cancel: "❌ Отмена"
