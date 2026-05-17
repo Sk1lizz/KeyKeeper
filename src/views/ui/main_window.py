@@ -137,6 +137,7 @@ class Ui_MainWindow(object):
 
         self.table = QTableWidget(self.centralwidget)
         self.table.setObjectName("table")
+        self.table.setEditTriggers(QTableWidget.NoEditTriggers)
 
         self.horizontalLayout_2.addWidget(self.table)
 

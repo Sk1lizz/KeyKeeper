@@ -7,12 +7,10 @@ from PySide6.QtCore import Qt, Signal, QTimer
 from src.views.ui.main_window import Ui_MainWindow
 from PySide6.QtGui import QCursor
 
-
-
-from typing import Optional
+from src.views.add_entry import EntryAdd
+from src.views.edit_entry import EntryEdit
 
 from src.utils.translator import tr
-from src.models.password_entry import EntryPassword
 from src.utils.logger import logger, debug, info, warning, error, critical
 
 
@@ -31,7 +29,6 @@ class MainWindow(QMainWindow):
         self._setup_menu()
         self._connect()
 
-        #self.add_test()            # Добавление новых записей для тестов. УДАЛИТЬ ПЕРЕД ПРОДОМ
 
         self._start()
 
@@ -107,6 +104,8 @@ class MainWindow(QMainWindow):
     def _connect(self) -> None:
         self.ui.btn_block.clicked.connect(self._block_app)
         self.ui.btn_block_2.clicked.connect(self._block_app)
+
+        self.ui.btn_add.clicked.connect(self._add_new_entry)
 
     def _start(self) -> None:
         """"""
@@ -184,7 +183,12 @@ class MainWindow(QMainWindow):
 
 
     def _add_new_entry(self) -> None:
-        pass
+        window = EntryAdd(controller=self.password_controller)
+
+        result = window.exec()
+
+        if result:
+            self._start()
 
     def _delete(self, row: int | None) -> None:
         """"""
@@ -197,11 +201,21 @@ class MainWindow(QMainWindow):
 
         self._start()
 
+
     def _block_app(self) -> None:
         self.lock_vault.emit()
 
+
     def _edit_entry(self, row: int) -> None:
-        print("edit - ", row)
+        id = self.ui.table.item(row, 0).data(Qt.UserRole)
+
+        window = EntryEdit(controller=self.password_controller, id=id)
+
+        result = window.exec()
+
+        if result:
+            self._start()
+
 
     def _copy_entry(self, row: int) -> None:
         """"""
@@ -213,42 +227,8 @@ class MainWindow(QMainWindow):
 
             if password:
                 QApplication.clipboard().setText(password)
-                print(password)
 
                 text = self.ui.lbl_status.text()
                 self.ui.lbl_status.setText(self.copy_status)
 
                 QTimer.singleShot(1000, lambda: self.ui.lbl_status.setText(text))
-
-    def add_test(self) -> None:
-        controller = self.password_controller
-
-        controller.add_entry(
-            title="TEST_ONE",
-            username="USERNAME_ONE",
-            password="PASSWORD_TEST_1"
-        )
-
-        controller.add_entry(
-            title="TEST_TWO",
-            username="USERNAME_TWO",
-            password="PASSWORD_TEST_2"
-        )
-
-        controller.add_entry(
-            title="TEST_THREE",
-            username="USERNAME_THREE",
-            password="PASSWORD_TEST_3"
-        )
-
-        controller.add_entry(
-            title="TEST_FOUR",
-            username="USERNAME_FOUR",
-            password="PASSWORD_TEST_4"
-        )
-
-        controller.add_entry(
-            title="TEST_FIVE",
-            username="USERNAME_FIVE",
-            password="PASSWORD_TEST_5"
-        )
