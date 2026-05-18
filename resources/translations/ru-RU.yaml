@@ -139,3 +139,11 @@ edit-entry:
   button:
     save: "✅ Сохранить"
     cancel: "❌ Отмена"
+
+
+delete:
+  title: "Подтверждение удаления"
+  question: "Удалить запись '{title}'?"
+  warning: "Это действие нельзя отменить."
+  yes: "✅ Да"
+  no: "❌ Нет"
