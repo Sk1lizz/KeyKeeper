@@ -2,7 +2,7 @@
 
 """"""
 
-from PySide6.QtWidgets import QApplication, QHBoxLayout, QHeaderView, QMainWindow, QPushButton, QTableWidgetItem, QWidget
+from PySide6.QtWidgets import QApplication, QHBoxLayout, QHeaderView, QMainWindow, QPushButton, QTableWidgetItem, QWidget, QMessageBox
 from PySide6.QtCore import Qt, Signal, QTimer
 from src.views.ui.main_window import Ui_MainWindow
 from PySide6.QtGui import QCursor
@@ -218,6 +218,8 @@ class MainWindow(QMainWindow):
 
         title = self.ui.table.item(row, 0).text()
 
+        if not self._confirm_delete(title): return
+
         self.password_controller.delete_entry(entry_id)
 
         self._start()
@@ -289,4 +291,30 @@ class MainWindow(QMainWindow):
 
         self._row = row
 
-    
+    def _confirm_delete(self, title: str) -> bool:
+        msg_box = QMessageBox(self)
+
+        name = tr.get("delete.title")
+        question = tr.get("delete.question", title=title)
+        warning = tr.get("delete.warning")
+        btn = {
+            "yes": tr.get("delete.yes-btn"),
+            "no": tr.get("delete.no-btn")
+        }
+
+        msg_box.setWindowTitle(name)
+        msg_box.setText(question)
+        msg_box.setInformativeText(warning)
+        msg_box.setIcon(QMessageBox.Question)
+
+        btn_yes = msg_box.addButton(btn["yes"], QMessageBox.YesRole)
+        btn_no = msg_box.addButton(btn["no"], QMessageBox.NoRole)
+        msg_box.setDefaultButton(btn_no)
+
+        msg_box.exec()
+
+        result = msg_box.clickedButton() == btn_yes
+
+        print(result)
+
+        return result
