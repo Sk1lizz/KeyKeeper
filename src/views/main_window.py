@@ -2,7 +2,7 @@
 
 """"""
 
-from PySide6.QtWidgets import QApplication, QHBoxLayout, QHeaderView, QMainWindow, QPushButton, QTableWidgetItem, QWidget
+from PySide6.QtWidgets import QApplication, QHBoxLayout, QHeaderView, QMainWindow, QPushButton, QTableWidgetItem, QWidget, QMessageBox
 from PySide6.QtCore import Qt, Signal, QTimer
 from src.views.ui.main_window import Ui_MainWindow
 from PySide6.QtGui import QCursor
@@ -18,6 +18,8 @@ class MainWindow(QMainWindow):
     """"""
 
     lock_vault = Signal()
+
+    _row = -1
 
     def __init__(self, password_controller=None):
         super(MainWindow, self).__init__()
@@ -66,6 +68,9 @@ class MainWindow(QMainWindow):
         ]
 
         self.copy_status = tr.get("main-window.status-text.copy")
+        self.delete_status = tr.get("main-window.status-text.deleted")
+        self.added_status = tr.get("main-window.status-text.added")
+        self.edited_status = tr.get("main-window.status-text.edited")
 
         #
 
@@ -102,6 +107,10 @@ class MainWindow(QMainWindow):
         self.ui.btn_block_2.clicked.connect(self._block_app)
 
         self.ui.btn_add.clicked.connect(self._add_new_entry)
+        self.ui.btn_delete.clicked.connect(self._delete)
+
+        self.ui.table.clicked.connect(self._update_row)
+        self.ui.table.itemSelectionChanged.connect(self._update_row_section)
 
     def _start(self) -> None:
         """"""
@@ -186,17 +195,39 @@ class MainWindow(QMainWindow):
 
         if result:
             self._start()
+            text = self.ui.lbl_status.text()
+            self.ui.lbl_status.setText(self.added_status)
 
-    def _delete(self, row: int | None) -> None:
+            QTimer.singleShot(1000, lambda: self.ui.lbl_status.setText(text))
+
+    def _delete(self, row: int | None=None) -> None:
         """"""
+
+        if row is None or row is False:
+
+            if self._row < 0: return
+
+            row = self._row
+
+        try:
+            entry_id = self.ui.table.item(row, 0).data(Qt.UserRole)
+
+        except:
+            warning("Попытка удаления несуществуешей записи")
+            return
 
         title = self.ui.table.item(row, 0).text()
 
-        entry_id = self.ui.table.item(row, 0).data(Qt.UserRole)
+        if not self._confirm_delete(title): return
 
         self.password_controller.delete_entry(entry_id)
 
         self._start()
+
+        text = self.ui.lbl_status.text()
+        self.ui.lbl_status.setText(self.delete_status)
+
+        QTimer.singleShot(1000, lambda: self.ui.lbl_status.setText(text))
 
 
     def _block_app(self) -> None:
@@ -212,6 +243,11 @@ class MainWindow(QMainWindow):
 
         if result:
             self._start()
+
+            text = self.ui.lbl_status.text()
+            self.ui.lbl_status.setText(self.edited_status)
+
+            QTimer.singleShot(1000, lambda: self.ui.lbl_status.setText(text))
 
 
     def _copy_entry(self, row: int) -> None:
@@ -235,3 +271,50 @@ class MainWindow(QMainWindow):
         status_text = tr.get("main-window.status", count=str(amount))
 
         self.ui.lbl_status.setText(status_text)
+
+        result = (amount != 0)
+        self.ui.btn_delete.setEnabled(result)
+
+    def _update_row(self, index) -> None:
+
+        row = index.row()
+
+        self._row = row
+
+    def _update_row_section(self) -> None:
+        selected = self.ui.table.selectionModel().selectedRows()
+
+        if selected:
+            row = selected[0].row()
+        else:
+            row = -1
+
+        self._row = row
+
+    def _confirm_delete(self, title: str) -> bool:
+        msg_box = QMessageBox(self)
+
+        name = tr.get("delete.title")
+        question = tr.get("delete.question", title=title)
+        warning = tr.get("delete.warning")
+        btn = {
+            "yes": tr.get("delete.yes-btn"),
+            "no": tr.get("delete.no-btn")
+        }
+
+        msg_box.setWindowTitle(name)
+        msg_box.setText(question)
+        msg_box.setInformativeText(warning)
+        msg_box.setIcon(QMessageBox.Question)
+
+        btn_yes = msg_box.addButton(btn["yes"], QMessageBox.YesRole)
+        btn_no = msg_box.addButton(btn["no"], QMessageBox.NoRole)
+        msg_box.setDefaultButton(btn_no)
+
+        msg_box.exec()
+
+        result = msg_box.clickedButton() == btn_yes
+
+        print(result)
+
+        return result
