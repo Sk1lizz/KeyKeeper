@@ -19,6 +19,8 @@ class MainWindow(QMainWindow):
 
     lock_vault = Signal()
 
+    _row = -1
+
     def __init__(self, password_controller=None):
         super(MainWindow, self).__init__()
         self.ui = Ui_MainWindow()
@@ -106,6 +108,9 @@ class MainWindow(QMainWindow):
 
         self.ui.btn_add.clicked.connect(self._add_new_entry)
         self.ui.btn_delete.clicked.connect(self._delete)
+
+        self.ui.table.clicked.connect(self._update_row)
+        self.ui.table.itemSelectionChanged.connect(self._update_row_section)
 
     def _start(self) -> None:
         """"""
@@ -195,24 +200,25 @@ class MainWindow(QMainWindow):
 
             QTimer.singleShot(1000, lambda: self.ui.lbl_status.setText(text))
 
-    def _delete(self, row: int | None) -> None:
+    def _delete(self, row: int | None=None) -> None:
         """"""
 
-        if row is None:
-            current_row = self.ui.table.selectionModel().selectedRows()
+        if row is None or row is False:
 
-            if current_row <= 0: return
+            if self._row < 0: return
 
-            row = current_row
+            row = self._row
 
         try:
-
             entry_id = self.ui.table.item(row, 0).data(Qt.UserRole)
-
-            self.password_controller.delete_entry(entry_id)
 
         except:
             warning("Попытка удаления несуществуешей записи")
+            return
+
+        title = self.ui.table.item(row, 0).text()
+
+        self.password_controller.delete_entry(entry_id)
 
         self._start()
 
@@ -263,3 +269,24 @@ class MainWindow(QMainWindow):
         status_text = tr.get("main-window.status", count=str(amount))
 
         self.ui.lbl_status.setText(status_text)
+
+        result = (amount != 0)
+        self.ui.btn_delete.setEnabled(result)
+
+    def _update_row(self, index) -> None:
+
+        row = index.row()
+
+        self._row = row
+
+    def _update_row_section(self) -> None:
+        selected = self.ui.table.selectionModel().selectedRows()
+
+        if selected:
+            row = selected[0].row()
+        else:
+            row = -1
+
+        self._row = row
+
+    
