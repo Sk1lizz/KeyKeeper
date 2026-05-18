@@ -66,6 +66,9 @@ class MainWindow(QMainWindow):
         ]
 
         self.copy_status = tr.get("main-window.status-text.copy")
+        self.delete_status = tr.get("main-window.status-text.deleted")
+        self.added_status = tr.get("main-window.status-text.added")
+        self.edited_status = tr.get("main-window.status-text.edited")
 
         #
 
@@ -102,6 +105,7 @@ class MainWindow(QMainWindow):
         self.ui.btn_block_2.clicked.connect(self._block_app)
 
         self.ui.btn_add.clicked.connect(self._add_new_entry)
+        self.ui.btn_delete.clicked.connect(self._delete)
 
     def _start(self) -> None:
         """"""
@@ -186,17 +190,36 @@ class MainWindow(QMainWindow):
 
         if result:
             self._start()
+            text = self.ui.lbl_status.text()
+            self.ui.lbl_status.setText(self.added_status)
+
+            QTimer.singleShot(1000, lambda: self.ui.lbl_status.setText(text))
 
     def _delete(self, row: int | None) -> None:
         """"""
 
-        title = self.ui.table.item(row, 0).text()
+        if row is None:
+            current_row = self.ui.table.selectionModel().selectedRows()
 
-        entry_id = self.ui.table.item(row, 0).data(Qt.UserRole)
+            if current_row <= 0: return
 
-        self.password_controller.delete_entry(entry_id)
+            row = current_row
+
+        try:
+
+            entry_id = self.ui.table.item(row, 0).data(Qt.UserRole)
+
+            self.password_controller.delete_entry(entry_id)
+
+        except:
+            warning("Попытка удаления несуществуешей записи")
 
         self._start()
+
+        text = self.ui.lbl_status.text()
+        self.ui.lbl_status.setText(self.delete_status)
+
+        QTimer.singleShot(1000, lambda: self.ui.lbl_status.setText(text))
 
 
     def _block_app(self) -> None:
@@ -212,6 +235,11 @@ class MainWindow(QMainWindow):
 
         if result:
             self._start()
+
+            text = self.ui.lbl_status.text()
+            self.ui.lbl_status.setText(self.edited_status)
+
+            QTimer.singleShot(1000, lambda: self.ui.lbl_status.setText(text))
 
 
     def _copy_entry(self, row: int) -> None:
